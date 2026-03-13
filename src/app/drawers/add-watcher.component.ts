@@ -152,9 +152,9 @@ import { CommonModule } from '@angular/common';
             
             @if (mode === 'onboarding') {
               <!-- Guided Tour Tooltip -->
-              <div class="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[280px] text-center animate-bounce z-20 whitespace-normal leading-relaxed">
+              <div class="absolute bottom-full mb-4 right-0 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[280px] text-center animate-bounce z-20 whitespace-normal leading-relaxed">
                 🤖 An rWatcher is the machine that runs your tasks. Click Next when you're ready!
-                <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45"></div>
+                <div class="absolute -bottom-1.5 right-8 w-3 h-3 bg-slate-800 rotate-45"></div>
               </div>
               
               <!-- Pulsing ring -->

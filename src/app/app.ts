@@ -110,6 +110,9 @@ export class App {
 
   toggleNotifications() {
     this.showNotifications.update(v => !v);
+    if (!this.completedSteps().includes('notifications')) {
+      this.completedSteps.update(steps => [...steps, 'notifications']);
+    }
   }
 
   closeDrawer() {

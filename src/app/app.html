@@ -2,7 +2,7 @@
   <!-- Header -->
   <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between sticky top-0 z-30">
     <div class="flex items-center gap-3">
-      <div class="bg-primary p-1.5 rounded-lg text-white flex items-center justify-center">
+      <div class="bg-primary size-10 rounded-lg text-white flex items-center justify-center">
         <span class="material-symbols-outlined text-2xl">monitoring</span>
       </div>
       <h1 class="text-xl font-bold tracking-tight text-slate-900">Automai Watcher</h1>
@@ -10,7 +10,7 @@
     <div class="flex items-center gap-2">
       <div class="flex items-center border-r border-slate-200 pr-4 mr-2 gap-1">
         <div class="relative">
-          <button (click)="toggleNotifications()" class="p-2 hover:bg-slate-100 rounded-full transition-colors relative" title="Notifications">
+          <button (click)="toggleNotifications()" class="size-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors relative" title="Notifications">
             <span class="material-symbols-outlined text-slate-600">notifications</span>
             <span class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
@@ -23,7 +23,7 @@
               </div>
               <div class="max-h-96 overflow-y-auto">
                 <div class="p-4 border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer flex gap-3 items-start bg-blue-50/50">
-                  <div class="bg-blue-100 text-blue-600 p-1.5 rounded-full shrink-0 mt-0.5">
+                  <div class="bg-blue-100 text-blue-600 size-8 flex items-center justify-center rounded-full shrink-0 mt-0.5">
                     <span class="material-symbols-outlined text-[16px]">description</span>
                   </div>
                   <div class="flex flex-col">
@@ -40,13 +40,13 @@
             </div>
           }
         </div>
-        <button class="p-2 hover:bg-slate-100 rounded-full transition-colors" title="Devices">
+        <button class="size-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors" title="Devices">
           <span class="material-symbols-outlined text-slate-600">devices</span>
         </button>
-        <button class="p-2 hover:bg-slate-100 rounded-full transition-colors" title="Documentation">
+        <button class="size-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors" title="Documentation">
           <span class="material-symbols-outlined text-slate-600">description</span>
         </button>
-        <button class="p-2 hover:bg-slate-100 rounded-full transition-colors" title="Settings">
+        <button class="size-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors" title="Settings">
           <span class="material-symbols-outlined text-slate-600">settings</span>
         </button>
       </div>
@@ -116,7 +116,7 @@
                [class.opacity-75]="monitor.status === 'disabled'">
             <!-- Info & Status -->
             <div class="flex items-center gap-4 min-w-[250px]">
-              <div class="p-2 rounded-md shrink-0"
+              <div class="size-10 flex items-center justify-center rounded-md shrink-0"
                    [class.bg-blue-50]="monitor.status === 'running'" [class.text-blue-600]="monitor.status === 'running'"
                    [class.bg-slate-100]="monitor.status === 'pending'" [class.text-slate-600]="monitor.status === 'pending'"
                    [class.bg-slate-200]="monitor.status === 'disabled'" [class.text-slate-500]="monitor.status === 'disabled'">
@@ -207,7 +207,7 @@
               </button>
 
               <div class="relative group">
-                <button class="text-slate-400 hover:text-slate-600 transition-colors p-1.5 rounded-md" [class.hover:bg-slate-100]="monitor.status !== 'disabled'" [class.hover:bg-slate-200]="monitor.status === 'disabled'">
+                <button class="text-slate-400 hover:text-slate-600 transition-colors size-8 flex items-center justify-center rounded-md" [class.hover:bg-slate-100]="monitor.status !== 'disabled'" [class.hover:bg-slate-200]="monitor.status === 'disabled'">
                   <span class="material-symbols-outlined text-[20px]">more_vert</span>
                 </button>
                 <div class="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
@@ -367,7 +367,7 @@
             <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Resources</h3>
             
             <a class="group flex items-start gap-4 p-5 border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all text-left rounded bg-slate-50" href="#">
-              <div class="bg-white p-3 border border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors rounded text-slate-600 shrink-0">
+              <div class="bg-white size-12 flex items-center justify-center border border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors rounded text-slate-600 shrink-0">
                 <span class="material-symbols-outlined">play_circle</span>
               </div>
               <div>
@@ -377,7 +377,7 @@
             </a>
             
             <a class="group flex items-start gap-4 p-5 border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all text-left rounded bg-slate-50" href="#">
-              <div class="bg-white p-3 border border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors rounded text-slate-600 shrink-0">
+              <div class="bg-white size-12 flex items-center justify-center border border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors rounded text-slate-600 shrink-0">
                 <span class="material-symbols-outlined">menu_book</span>
               </div>
               <div>

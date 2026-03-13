@@ -1,0 +1,408 @@
+<div class="flex flex-col h-full min-h-screen bg-background-light text-slate-900">
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between sticky top-0 z-30">
+    <div class="flex items-center gap-3">
+      <div class="bg-primary p-1.5 rounded-lg text-white flex items-center justify-center">
+        <span class="material-symbols-outlined text-2xl">monitoring</span>
+      </div>
+      <h1 class="text-xl font-bold tracking-tight text-slate-900">Automai Watcher</h1>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="flex items-center border-r border-slate-200 pr-4 mr-2 gap-1">
+        <div class="relative">
+          <button (click)="toggleNotifications()" class="p-2 hover:bg-slate-100 rounded-full transition-colors relative" title="Notifications">
+            <span class="material-symbols-outlined text-slate-600">notifications</span>
+            <span class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+          </button>
+          
+          @if (showNotifications()) {
+            <div class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-slate-200 z-50 overflow-hidden">
+              <div class="px-4 py-3 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                <h3 class="font-semibold text-slate-800 text-sm">Notifications</h3>
+                <button class="text-xs text-primary hover:underline">Mark all as read</button>
+              </div>
+              <div class="max-h-96 overflow-y-auto">
+                <div class="p-4 border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer flex gap-3 items-start bg-blue-50/50">
+                  <div class="bg-blue-100 text-blue-600 p-1.5 rounded-full shrink-0 mt-0.5">
+                    <span class="material-symbols-outlined text-[16px]">description</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <p class="text-sm text-slate-800 font-medium">Script received</p>
+                    <p class="text-xs text-slate-500 mt-0.5">A new script was received from Scenario Builder and Bot Agent was installed automatically.</p>
+                    <p class="text-[10px] text-slate-400 mt-1.5 font-medium">Just now</p>
+                  </div>
+                  <div class="size-2 bg-blue-500 rounded-full shrink-0 mt-1.5"></div>
+                </div>
+              </div>
+              <div class="p-2 text-center border-t border-slate-100">
+                <button class="text-xs text-slate-500 hover:text-slate-700 font-medium">View all notifications</button>
+              </div>
+            </div>
+          }
+        </div>
+        <button class="p-2 hover:bg-slate-100 rounded-full transition-colors" title="Devices">
+          <span class="material-symbols-outlined text-slate-600">devices</span>
+        </button>
+        <button class="p-2 hover:bg-slate-100 rounded-full transition-colors" title="Documentation">
+          <span class="material-symbols-outlined text-slate-600">description</span>
+        </button>
+        <button class="p-2 hover:bg-slate-100 rounded-full transition-colors" title="Settings">
+          <span class="material-symbols-outlined text-slate-600">settings</span>
+        </button>
+      </div>
+      <div class="flex items-center gap-3 pl-2">
+        <div class="text-right hidden sm:block">
+          <p class="text-sm font-semibold leading-none">Admin User</p>
+          <p class="text-xs text-slate-500 mt-1">System Administrator</p>
+        </div>
+        <div class="size-10 bg-primary/10 flex items-center justify-center border border-primary/20 overflow-hidden rounded">
+          <img alt="User profile avatar" class="size-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhTEKmbSnBqXI2TKEV1--O0lHpww03mz4Ts_jCs7_n2U9bJoJdjLFpoxelgTrdFuS6tv1ZyeRUHpOg24g6yn9Rkx2-OaPLd85jCeXoFh1ViSd--92pNyOHhbMOghtgGvhQ8u1shPoHQF-GnKUNon9guC1TtNFXTQRrC3sE-W4nl1ohM7mSpf2BRvanwjdJJeglaU-HaO0pFr5dhPJ0R_n8pRk_Vob350knexnJZ5Yy7uOX0Zc5CpGljyMSZHDoSx_PA9x3lkrhg-c" referrerpolicy="no-referrer"/>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="bg-white border-b border-slate-200 px-6 overflow-x-auto">
+    <div class="flex gap-8">
+      <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 flex items-center gap-2" 
+         [ngClass]="activeTab() === 'dashboard' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'"
+         href="#" (click)="activeTab.set('dashboard'); $event.preventDefault()">
+        <span class="material-symbols-outlined text-[20px]">dashboard</span> Dashboard
+      </a>
+      <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 flex items-center gap-2" 
+         [ngClass]="activeTab() === 'process-monitor' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'"
+         href="#" (click)="activeTab.set('process-monitor'); $event.preventDefault()">
+        <span class="material-symbols-outlined text-[20px]">monitor_heart</span> Process Monitors
+      </a>
+      <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2" href="#">
+        <span class="material-symbols-outlined text-[20px]">assessment</span> Reports
+      </a>
+      <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2" href="#">
+        <span class="material-symbols-outlined text-[20px]">visibility</span> rWatchers
+      </a>
+      <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2" href="#">
+        <span class="material-symbols-outlined text-[20px]">calendar_today</span> Schedules
+      </a>
+      <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2" href="#">
+        <span class="material-symbols-outlined text-[20px]">folder</span> Projects
+      </a>
+      <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2" href="#">
+        <span class="material-symbols-outlined text-[20px]">help_outline</span> Help
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-1 px-6 pb-12 max-w-7xl mx-auto w-full">
+    @if (activeTab() === 'process-monitor' || completedSteps().includes('monitor')) {
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-6 mb-6">
+        <div class="relative w-full max-w-md">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="material-symbols-outlined text-slate-400 text-[20px]">search</span>
+          </div>
+          <input type="text" id="searchMonitors" class="block w-full pl-10 pr-4 py-2 text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Search monitors..." />
+        </div>
+        <div class="flex items-center gap-3">
+          <button (click)="openDrawer('watcher', 'standalone')" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm">
+            <span class="material-symbols-outlined text-[18px]">desktop_windows</span> Add Watcher
+          </button>
+          <button (click)="openDrawer('schedule', 'standalone')" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm">
+            <span class="material-symbols-outlined text-[18px]">schedule</span> Add Schedule
+          </button>
+          <button (click)="openDrawer('monitor', 'standalone')" class="px-4 py-2 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+            <span class="material-symbols-outlined text-[18px]">add</span> New Monitor
+          </button>
+        </div>
+      </div>
+      <div class="flex flex-col gap-3">
+        @for (monitor of monitors(); track monitor.id) {
+          <div class="bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 flex items-center justify-between w-full gap-4"
+               [class.bg-slate-50]="monitor.status === 'disabled'"
+               [class.opacity-75]="monitor.status === 'disabled'">
+            <!-- Info & Status -->
+            <div class="flex items-center gap-4 min-w-[250px]">
+              <div class="p-2 rounded-md shrink-0"
+                   [class.bg-blue-50]="monitor.status === 'running'" [class.text-blue-600]="monitor.status === 'running'"
+                   [class.bg-slate-100]="monitor.status === 'pending'" [class.text-slate-600]="monitor.status === 'pending'"
+                   [class.bg-slate-200]="monitor.status === 'disabled'" [class.text-slate-500]="monitor.status === 'disabled'">
+                <span class="material-symbols-outlined">
+                  {{ monitor.status === 'running' ? 'autorenew' : (monitor.status === 'disabled' ? 'block' : 'schedule') }}
+                </span>
+              </div>
+              <div class="flex flex-col">
+                <h3 class="font-bold text-slate-900 text-sm" [class.text-slate-700]="monitor.status === 'disabled'">{{ monitor.name }}</h3>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <span class="flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-md"
+                        [class.text-blue-700]="monitor.status === 'running'" [class.bg-blue-100]="monitor.status === 'running'"
+                        [class.text-slate-700]="monitor.status === 'pending'" [class.bg-slate-100]="monitor.status === 'pending'"
+                        [class.text-slate-600]="monitor.status === 'disabled'" [class.bg-slate-200]="monitor.status === 'disabled'">
+                    @if (monitor.status === 'running') {
+                      <span class="material-symbols-outlined text-[12px] animate-spin">sync</span> Running
+                    } @else if (monitor.status === 'pending') {
+                      <span class="size-1.5 rounded-full bg-slate-400"></span> Pending
+                    } @else {
+                      <span class="size-1.5 rounded-full bg-slate-500"></span> Disabled
+                    }
+                  </span>
+                  <span class="text-[11px] text-slate-500">{{ monitor.message }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Horizontal Stats/Insights -->
+            <div class="flex items-center gap-8 flex-1 justify-end px-4">
+              <div class="flex flex-col">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Last Run</span>
+                <span class="text-xs font-semibold" [class.text-slate-700]="monitor.status !== 'disabled'" [class.text-slate-500]="monitor.status === 'disabled'">{{ monitor.lastRun }}</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Success Rate</span>
+                <span class="text-xs font-bold" [class.text-emerald-600]="monitor.status !== 'disabled'" [class.text-slate-500]="monitor.status === 'disabled'">{{ monitor.successRate }}</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Resources</span>
+                <div class="flex items-center gap-1 text-xs font-semibold" [class.text-slate-700]="monitor.status !== 'disabled'" [class.text-slate-500]="monitor.status === 'disabled'">
+                  <span class="material-symbols-outlined text-[14px] text-slate-400">desktop_windows</span>
+                  <span>{{ monitor.resources }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-4 pl-4 border-l shrink-0" [class.border-slate-100]="monitor.status !== 'disabled'" [class.border-slate-200]="monitor.status === 'disabled'">
+              
+              <!-- Enable/Disable Toggle -->
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-medium" [class.text-slate-700]="monitor.status !== 'disabled'" [class.text-slate-400]="monitor.status === 'disabled'">
+                  {{ monitor.status === 'disabled' ? 'Disabled' : 'Enabled' }}
+                </span>
+                <button (click)="toggleEnableState(monitor.id)" class="relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" [class.bg-primary]="monitor.status !== 'disabled'" [class.bg-slate-200]="monitor.status === 'disabled'">
+                  <span class="inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform" [class.translate-x-4]="monitor.status !== 'disabled'" [class.translate-x-1]="monitor.status === 'disabled'"></span>
+                </button>
+              </div>
+
+              <!-- Run/Stop Button -->
+              <button (click)="toggleRunState(monitor.id)" 
+                      [disabled]="monitor.status === 'disabled'"
+                      class="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-md shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      [class.bg-red-50]="monitor.status === 'running'"
+                      [class.text-red-600]="monitor.status === 'running'"
+                      [class.hover:bg-red-100]="monitor.status === 'running'"
+                      [class.bg-primary]="monitor.status === 'pending'"
+                      [class.text-white]="monitor.status === 'pending'"
+                      [class.hover:bg-primary/90]="monitor.status === 'pending'"
+                      [class.bg-slate-100]="monitor.status === 'disabled'"
+                      [class.text-slate-400]="monitor.status === 'disabled'">
+                <span class="material-symbols-outlined text-[16px]">{{ monitor.status === 'running' ? 'stop' : 'play_arrow' }}</span>
+                {{ monitor.status === 'running' ? 'Stop' : 'Run' }}
+              </button>
+
+              <div class="relative group">
+                <button class="text-slate-400 hover:text-slate-600 transition-colors p-1.5 rounded-md" [class.hover:bg-slate-100]="monitor.status !== 'disabled'" [class.hover:bg-slate-200]="monitor.status === 'disabled'">
+                  <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                </button>
+                <div class="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                  <div class="py-1">
+                    <button class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                      <span class="material-symbols-outlined text-[16px]">edit</span> Edit
+                    </button>
+                    <button class="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 flex items-center gap-2">
+                      <span class="material-symbols-outlined text-[16px]">delete</span> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="bg-white border border-slate-200 p-8 lg:p-12 min-h-[500px] flex flex-col shadow-sm rounded">
+        <!-- Header -->
+        <div class="flex flex-col items-center mb-10 text-center">
+          <div class="bg-primary/5 size-20 rounded-full flex items-center justify-center mb-6 text-primary">
+            <span class="material-symbols-outlined text-4xl">rocket_launch</span>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-900 mb-2">Welcome to Automai Watcher</h2>
+          <p class="text-slate-500 max-w-lg leading-relaxed">
+            No data is available yet. Complete these steps to start monitoring your processes and receive real-time alerts.
+          </p>
+          
+          <!-- Launch First Process Button (Moved to top) -->
+          <div class="mt-8">
+            <button (click)="startOnboarding()" class="bg-primary hover:bg-primary/90 text-white font-bold py-3.5 px-10 shadow-lg shadow-primary/25 transition-all flex items-center gap-2 transform hover:scale-105 active:scale-95 rounded">
+              <span class="material-symbols-outlined">rocket_launch</span> Launch First Process
+            </button>
+          </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl mx-auto mt-4">
+          
+          <!-- Left Side: Onboarding Checklist -->
+          <div class="flex flex-col">
+            <div class="bg-slate-50 p-6 border border-slate-100 text-left rounded h-full">
+              <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6">Onboarding Checklist</h3>
+              
+              <div class="space-y-4">
+                <!-- Step 1: Completed -->
+                <div class="flex items-start gap-4 p-4 bg-emerald-50/50 border border-emerald-100 rounded relative overflow-hidden">
+                  <div class="size-6 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5">
+                    <span class="material-symbols-outlined text-sm font-bold">check</span>
+                  </div>
+                  <div class="flex flex-col w-full">
+                    <div class="flex items-center justify-between">
+                      <span class="font-bold text-slate-700">Step 1: Register Bot Manager</span>
+                      <a href="#" class="text-xs text-primary hover:underline flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">menu_book</span> Guide
+                      </a>
+                    </div>
+                    <div class="flex flex-col gap-2 mt-3">
+                      <div class="flex items-center gap-2 text-sm text-slate-600">
+                        <span class="size-1.5 rounded-full bg-emerald-500"></span> 
+                        <span class="line-through">Script received from Scenario Builder</span>
+                        <span class="material-symbols-outlined text-[14px] text-emerald-500 ml-auto">check_circle</span>
+                      </div>
+                      <div class="flex items-center gap-2 text-sm text-slate-600">
+                        <span class="size-1.5 rounded-full bg-emerald-500"></span> 
+                        <span class="line-through">Bot agent installed automatically</span>
+                        <span class="material-symbols-outlined text-[14px] text-emerald-500 ml-auto">check_circle</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 2: In Progress -->
+                <div class="flex items-start gap-4 p-4 border shadow-sm rounded transition-colors"
+                     [class.border-emerald-100]="completedSteps().includes('watcher') && completedSteps().includes('schedule')"
+                     [class.bg-emerald-50]="completedSteps().includes('watcher') && completedSteps().includes('schedule')"
+                     [class.border-primary/30]="!(completedSteps().includes('watcher') && completedSteps().includes('schedule'))"
+                     [class.bg-primary/5]="!(completedSteps().includes('watcher') && completedSteps().includes('schedule'))">
+                  
+                  @if (completedSteps().includes('watcher') && completedSteps().includes('schedule')) {
+                    <div class="size-6 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5">
+                      <span class="material-symbols-outlined text-sm font-bold">check</span>
+                    </div>
+                  } @else {
+                    <div class="size-6 rounded-full border-2 border-primary flex items-center justify-center mt-0.5 shrink-0">
+                      <div class="size-2.5 bg-primary rounded-full"></div>
+                    </div>
+                  }
+                  
+                  <div class="flex flex-col w-full">
+                    <div class="flex items-center justify-between">
+                      <span class="font-bold text-slate-900">Step 2: Configure Watcher</span>
+                      <a href="#" class="text-xs text-primary hover:underline flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">menu_book</span> Guide
+                      </a>
+                    </div>
+                    <div class="flex flex-col gap-2 mt-3">
+                      <div class="flex items-center gap-2 text-sm text-slate-600">
+                        <span class="size-1.5 rounded-full" [ngClass]="completedSteps().includes('watcher') ? 'bg-emerald-500' : 'bg-slate-300'"></span> 
+                        <button (click)="openDrawer('watcher', 'onboarding')" class="hover:text-primary hover:underline cursor-pointer transition-colors" [class.line-through]="completedSteps().includes('watcher')">Add Watcher</button>
+                        @if (completedSteps().includes('watcher')) {
+                          <span class="material-symbols-outlined text-[14px] text-emerald-500 ml-auto">check_circle</span>
+                        }
+                      </div>
+                      <div class="flex items-center gap-2 text-sm text-slate-600">
+                        <span class="size-1.5 rounded-full" [ngClass]="completedSteps().includes('schedule') ? 'bg-emerald-500' : 'bg-slate-300'"></span> 
+                        <button (click)="openDrawer('schedule', 'onboarding')" class="hover:text-primary hover:underline cursor-pointer transition-colors" [class.line-through]="completedSteps().includes('schedule')">Add Schedule</button>
+                        @if (completedSteps().includes('schedule')) {
+                          <span class="material-symbols-outlined text-[14px] text-emerald-500 ml-auto">check_circle</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 3: Pending -->
+                <div class="flex items-start gap-4 p-4 border shadow-sm rounded transition-colors"
+                     [ngClass]="completedSteps().includes('schedule') ? 'border-primary/30 bg-primary/5' : 'border-slate-200 bg-white'">
+                  
+                  @if (completedSteps().includes('monitor')) {
+                    <div class="size-6 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5">
+                      <span class="material-symbols-outlined text-sm font-bold">check</span>
+                    </div>
+                  } @else if (completedSteps().includes('schedule')) {
+                    <div class="size-6 rounded-full border-2 border-primary flex items-center justify-center mt-0.5 shrink-0">
+                      <div class="size-2.5 bg-primary rounded-full"></div>
+                    </div>
+                  } @else {
+                    <div class="size-6 rounded-full border-2 border-slate-300 flex items-center justify-center mt-0.5 shrink-0"></div>
+                  }
+
+                  <div class="flex flex-col w-full">
+                    <div class="flex items-center justify-between">
+                      <span class="font-bold" [ngClass]="completedSteps().includes('schedule') ? 'text-slate-900' : 'text-slate-400'">Step 3: Create Process Monitor</span>
+                      <a href="#" class="text-xs text-primary hover:underline flex items-center gap-1" [ngClass]="completedSteps().includes('schedule') ? '' : 'opacity-50 pointer-events-none'">
+                        <span class="material-symbols-outlined text-[14px]">menu_book</span> Guide
+                      </a>
+                    </div>
+                    <div class="flex flex-col gap-2 mt-3">
+                      <div class="flex items-center gap-2 text-sm" [ngClass]="completedSteps().includes('schedule') ? 'text-slate-600' : 'text-slate-400'">
+                        <span class="size-1.5 rounded-full" [ngClass]="completedSteps().includes('monitor') ? 'bg-emerald-500' : 'bg-slate-200'"></span> 
+                        <button (click)="openDrawer('monitor', 'onboarding')" class="hover:text-primary hover:underline cursor-pointer transition-colors" [class.line-through]="completedSteps().includes('monitor')" [disabled]="!completedSteps().includes('schedule')">Submit & Launch</button>
+                        @if (completedSteps().includes('monitor')) {
+                          <span class="material-symbols-outlined text-[14px] text-emerald-500 ml-auto">check_circle</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side: Getting Started & Docs -->
+          <div class="flex flex-col gap-4">
+            <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Resources</h3>
+            
+            <a class="group flex items-start gap-4 p-5 border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all text-left rounded bg-slate-50" href="#">
+              <div class="bg-white p-3 border border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors rounded text-slate-600 shrink-0">
+                <span class="material-symbols-outlined">play_circle</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 mb-1">Getting Started Videos</h4>
+                <p class="text-sm text-slate-500">Learn how to set up your first watcher in minutes.</p>
+              </div>
+            </a>
+            
+            <a class="group flex items-start gap-4 p-5 border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all text-left rounded bg-slate-50" href="#">
+              <div class="bg-white p-3 border border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors rounded text-slate-600 shrink-0">
+                <span class="material-symbols-outlined">menu_book</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 mb-1">Documentation</h4>
+                <p class="text-sm text-slate-500">Explore in-depth guides and API documentation.</p>
+              </div>
+            </a>
+          </div>
+          
+        </div>
+      </div>
+    }
+  </main>
+
+  <footer class="px-6 py-4 text-center text-xs text-slate-500 border-t border-slate-200 bg-white/50 mt-auto">
+    © 2024 Automai Corp. All rights reserved. • Watcher Version 4.2.1
+  </footer>
+</div>
+
+<!-- Drawers -->
+@if (activeDrawer() === 'watcher') {
+  <app-add-watcher-drawer [mode]="drawerMode()" (closeDrawer)="closeDrawer()" (nextStep)="handleNextStep('watcher')"></app-add-watcher-drawer>
+}
+@if (activeDrawer() === 'schedule') {
+  <app-add-schedule-drawer [mode]="drawerMode()" (closeDrawer)="closeDrawer()" (nextStep)="handleNextStep('schedule')"></app-add-schedule-drawer>
+}
+@if (activeDrawer() === 'monitor') {
+  <app-create-process-monitor-drawer 
+    [mode]="drawerMode()"
+    (closeDrawer)="closeDrawer()" 
+    (nextStep)="handleNextStep('monitor')"
+    (openAddWatcher)="openDrawer('watcher', drawerMode())"
+    (openAddSchedule)="openDrawer('schedule', drawerMode())">
+  </app-create-process-monitor-drawer>
+}
+

@@ -1,22 +1,22 @@
 <div class="flex flex-col h-full min-h-screen bg-background-light text-slate-900">
   <!-- Header -->
-  <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between sticky top-0 z-30">
-    <div class="flex items-center gap-3">
-      <div class="bg-primary size-10 rounded-lg text-white flex items-center justify-center">
-        <span class="material-symbols-outlined text-2xl">monitoring</span>
+  <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-30">
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div class="bg-primary size-8 sm:size-10 rounded-lg text-white flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-xl sm:text-2xl">monitoring</span>
       </div>
-      <h1 class="text-xl font-bold tracking-tight text-slate-900">Automai Watcher</h1>
+      <h1 class="text-lg sm:text-xl font-bold tracking-tight text-slate-900 truncate">Automai Watcher</h1>
     </div>
-    <div class="flex items-center gap-2">
-      <div class="flex items-center border-r border-slate-200 pr-4 mr-2 gap-1">
+    <div class="flex items-center gap-1 sm:gap-2">
+      <div class="flex items-center border-r border-slate-200 pr-2 sm:pr-4 mr-1 sm:mr-2 gap-0.5 sm:gap-1">
         <div class="relative">
-          <button (click)="toggleNotifications()" class="size-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors relative" title="Notifications">
-            <span class="material-symbols-outlined text-slate-600">notifications</span>
-            <span class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+          <button (click)="toggleNotifications()" class="size-8 sm:size-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors relative" title="Notifications">
+            <span class="material-symbols-outlined text-[20px] sm:text-[24px] text-slate-600">notifications</span>
+            <span class="absolute top-1.5 sm:top-2 right-1.5 sm:right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
           
           @if (showNotifications()) {
-            <div class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-slate-200 z-50 overflow-hidden">
+            <div class="absolute right-0 sm:right-0 -right-16 mt-2 w-80 bg-white rounded-lg shadow-xl border border-slate-200 z-50 overflow-hidden">
               <div class="px-4 py-3 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                 <h3 class="font-semibold text-slate-800 text-sm">Notifications</h3>
                 <button class="text-xs text-primary hover:underline">Mark all as read</button>
@@ -40,22 +40,22 @@
             </div>
           }
         </div>
-        <button class="size-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors" title="Devices">
-          <span class="material-symbols-outlined text-slate-600">devices</span>
+        <button class="size-8 sm:size-10 hidden sm:flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors" title="Devices">
+          <span class="material-symbols-outlined text-[20px] sm:text-[24px] text-slate-600">devices</span>
         </button>
-        <button class="size-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors" title="Documentation">
-          <span class="material-symbols-outlined text-slate-600">description</span>
+        <button class="size-8 sm:size-10 hidden sm:flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors" title="Documentation">
+          <span class="material-symbols-outlined text-[20px] sm:text-[24px] text-slate-600">description</span>
         </button>
-        <button class="size-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors" title="Settings">
-          <span class="material-symbols-outlined text-slate-600">settings</span>
+        <button class="size-8 sm:size-10 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors" title="Settings">
+          <span class="material-symbols-outlined text-[20px] sm:text-[24px] text-slate-600">settings</span>
         </button>
       </div>
-      <div class="flex items-center gap-3 pl-2">
-        <div class="text-right hidden sm:block">
+      <div class="flex items-center gap-2 sm:gap-3 pl-1 sm:pl-2">
+        <div class="text-right hidden md:block">
           <p class="text-sm font-semibold leading-none">Admin User</p>
           <p class="text-xs text-slate-500 mt-1">System Administrator</p>
         </div>
-        <div class="size-10 bg-primary/10 flex items-center justify-center border border-primary/20 overflow-hidden rounded">
+        <div class="size-8 sm:size-10 shrink-0 bg-primary/10 flex items-center justify-center border border-primary/20 overflow-hidden rounded">
           <img alt="User profile avatar" class="size-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhTEKmbSnBqXI2TKEV1--O0lHpww03mz4Ts_jCs7_n2U9bJoJdjLFpoxelgTrdFuS6tv1ZyeRUHpOg24g6yn9Rkx2-OaPLd85jCeXoFh1ViSd--92pNyOHhbMOghtgGvhQ8u1shPoHQF-GnKUNon9guC1TtNFXTQRrC3sE-W4nl1ohM7mSpf2BRvanwjdJJeglaU-HaO0pFr5dhPJ0R_n8pRk_Vob350knexnJZ5Yy7uOX0Zc5CpGljyMSZHDoSx_PA9x3lkrhg-c" referrerpolicy="no-referrer"/>
         </div>
       </div>
@@ -63,8 +63,8 @@
   </header>
 
   <!-- Navigation -->
-  <nav class="bg-white border-b border-slate-200 px-6 overflow-x-auto">
-    <div class="flex gap-8">
+  <nav class="bg-white border-b border-slate-200 px-4 sm:px-6 overflow-x-auto">
+    <div class="flex gap-6 sm:gap-8 min-w-max">
       <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 flex items-center gap-2" 
          [ngClass]="activeTab() === 'dashboard' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'"
          href="#" (click)="activeTab.set('dashboard'); $event.preventDefault()">
@@ -94,29 +94,29 @@
   </nav>
 
   <!-- Main Content -->
-  <main class="flex-1 px-6 pb-12 max-w-7xl mx-auto w-full">
+  <main class="flex-1 px-4 sm:px-6 pb-12 max-w-7xl mx-auto w-full">
     @if (activeTab() === 'process-monitor' || completedSteps().includes('monitor')) {
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-6 mb-6">
-        <div class="relative w-full max-w-md">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4 sm:mt-6 mb-4 sm:mb-6">
+        <div class="relative w-full sm:max-w-md">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <span class="material-symbols-outlined text-slate-400 text-[20px]">search</span>
           </div>
           <input type="text" id="searchMonitors" class="block w-full pl-10 pr-4 py-2 text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Search monitors..." />
         </div>
-        <div class="flex items-center gap-3">
-          <button (click)="openDrawer('monitor', 'standalone')" class="px-4 py-2 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <button (click)="openDrawer('monitor', 'standalone')" class="w-full sm:w-auto justify-center px-4 py-2 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
             <span class="material-symbols-outlined text-[18px]">add</span> New Monitor
           </button>
         </div>
       </div>
       <div class="flex flex-col gap-3">
         @for (monitor of monitors(); track monitor.id) {
-          <div class="bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 flex items-center justify-between w-full gap-4"
+          <div class="bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 flex flex-col xl:flex-row xl:items-center justify-between w-full gap-4"
                [class.bg-slate-50]="monitor.status === 'disabled'"
                [class.opacity-75]="monitor.status === 'disabled'">
             <!-- Info & Status -->
-            <div class="flex items-center gap-4 min-w-[250px]">
-              <div class="size-10 flex items-center justify-center rounded-md shrink-0"
+            <div class="flex items-start sm:items-center gap-4 w-full xl:w-auto xl:min-w-[250px]">
+              <div class="size-10 flex items-center justify-center rounded-md shrink-0 mt-1 sm:mt-0"
                    [class.bg-blue-50]="monitor.status === 'running'" [class.text-blue-600]="monitor.status === 'running'"
                    [class.bg-slate-100]="monitor.status === 'pending'" [class.text-slate-600]="monitor.status === 'pending'"
                    [class.bg-slate-200]="monitor.status === 'disabled'" [class.text-slate-500]="monitor.status === 'disabled'">
@@ -141,17 +141,17 @@
                   </span>
                   <span class="text-[11px] text-slate-500">{{ monitor.message }}</span>
                 </div>
-                <div class="flex items-center gap-3 mt-1.5 text-[11px] text-slate-500">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-[11px] text-slate-500">
                   @if (monitor.scenarioAssigned) {
                     <div class="flex items-center gap-1">
                       <span class="material-symbols-outlined text-[12px]">account_tree</span>
-                      <span>{{ monitor.scenarioAssigned }}</span>
+                      <span class="truncate max-w-[120px] sm:max-w-none">{{ monitor.scenarioAssigned }}</span>
                     </div>
                   }
                   @if (monitor.projectLinked) {
                     <div class="flex items-center gap-1">
                       <span class="material-symbols-outlined text-[12px]">folder</span>
-                      <span>{{ monitor.projectLinked }}</span>
+                      <span class="truncate max-w-[120px] sm:max-w-none">{{ monitor.projectLinked }}</span>
                     </div>
                   }
                 </div>
@@ -159,16 +159,16 @@
             </div>
 
             <!-- Horizontal Stats/Insights -->
-            <div class="flex items-center gap-8 flex-1 justify-end px-4">
-              <div class="flex flex-col">
+            <div class="flex flex-wrap items-center gap-4 sm:gap-8 w-full xl:flex-1 xl:justify-end py-3 xl:py-0 border-y border-slate-100 xl:border-y-0 xl:px-4">
+              <div class="flex flex-col w-[45%] sm:w-auto">
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Last Run</span>
                 <span class="text-xs font-semibold" [class.text-slate-700]="monitor.status !== 'disabled'" [class.text-slate-500]="monitor.status === 'disabled'">{{ monitor.lastRun }}</span>
               </div>
-              <div class="flex flex-col">
+              <div class="flex flex-col w-[45%] sm:w-auto">
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Success Rate</span>
                 <span class="text-xs font-bold" [class.text-emerald-600]="monitor.status !== 'disabled'" [class.text-slate-500]="monitor.status === 'disabled'">{{ monitor.successRate }}</span>
               </div>
-              <div class="flex flex-col">
+              <div class="flex flex-col w-[45%] sm:w-auto">
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Resources</span>
                 <div class="flex items-center gap-1 text-xs font-semibold" [class.text-slate-700]="monitor.status !== 'disabled'" [class.text-slate-500]="monitor.status === 'disabled'">
                   <span class="material-symbols-outlined text-[14px] text-slate-400">desktop_windows</span>
@@ -178,7 +178,7 @@
             </div>
 
             <!-- Actions -->
-            <div class="flex items-center gap-4 pl-4 border-l shrink-0" [class.border-slate-100]="monitor.status !== 'disabled'" [class.border-slate-200]="monitor.status === 'disabled'">
+            <div class="flex items-center justify-between sm:justify-end gap-4 w-full xl:w-auto pt-2 xl:pt-0 xl:pl-4 xl:border-l shrink-0" [class.border-slate-100]="monitor.status !== 'disabled'" [class.border-slate-200]="monitor.status === 'disabled'">
               
               <!-- Enable/Disable Toggle -->
               <div class="flex items-center gap-2">
@@ -226,22 +226,31 @@
         }
       </div>
     } @else {
-      <div class="bg-white border border-slate-200 p-8 lg:p-12 min-h-[500px] flex flex-col shadow-sm rounded">
+      <div class="bg-white border border-slate-200 p-4 sm:p-8 lg:p-12 min-h-[500px] flex flex-col shadow-sm rounded">
         <!-- Header -->
-        <div class="flex flex-col items-center mb-10 text-center">
-          <div class="bg-primary/5 size-20 rounded-full flex items-center justify-center mb-6 text-primary">
-            <span class="material-symbols-outlined text-4xl">rocket_launch</span>
+        <div class="flex flex-col items-center mb-8 sm:mb-10 text-center">
+          <div class="bg-primary/5 size-16 sm:size-20 rounded-full flex items-center justify-center mb-4 sm:mb-6 text-primary">
+            <span class="material-symbols-outlined text-3xl sm:text-4xl">rocket_launch</span>
           </div>
-          <h2 class="text-2xl font-bold text-slate-900 mb-2">Welcome to Automai Watcher</h2>
-          <p class="text-slate-500 max-w-lg leading-relaxed">
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2">Welcome to Automai Watcher</h2>
+          <p class="text-sm sm:text-base text-slate-500 max-w-lg leading-relaxed">
             No data is available yet. Complete these steps to start monitoring your processes and receive real-time alerts.
           </p>
           
           <!-- Launch First Process Button (Moved to top) -->
-          <div class="mt-8">
-            <button (click)="startOnboarding()" class="bg-primary hover:bg-primary/90 text-white font-bold py-3.5 px-10 shadow-lg shadow-primary/25 transition-all flex items-center gap-2 transform hover:scale-105 active:scale-95 rounded">
+          <div class="mt-6 sm:mt-8 w-full sm:w-auto relative inline-block">
+            <button (click)="startOnboarding()" class="w-full sm:w-auto justify-center bg-primary hover:bg-primary/90 text-white font-bold py-3 sm:py-3.5 px-6 sm:px-10 shadow-lg shadow-primary/25 transition-all flex items-center gap-2 transform hover:scale-105 active:scale-95 rounded relative z-10">
               <span class="material-symbols-outlined">rocket_launch</span> Launch First Process
             </button>
+            
+            <!-- Guided Tour Tooltip -->
+            <div class="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[280px] text-center animate-bounce z-20 whitespace-normal leading-relaxed">
+              👋 Let's set up your first automated process together!
+              <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45"></div>
+            </div>
+            
+            <!-- Pulsing ring -->
+            <div class="absolute inset-0 rounded bg-primary/40 animate-ping z-0"></div>
           </div>
         </div>
 

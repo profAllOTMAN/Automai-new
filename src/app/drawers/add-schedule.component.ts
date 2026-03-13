@@ -166,9 +166,22 @@ import { CommonModule } from '@angular/common';
 
         <!-- Footer Actions -->
         <footer class="p-6 bg-white flex justify-end border-t border-slate-200">
-          <button (click)="nextStep.emit()" class="px-8 py-2 rounded-full bg-primary text-white font-medium text-sm hover:bg-primary/90 transition-colors shadow-md shadow-primary/20">
-            Submit
-          </button>
+          <div class="relative inline-block">
+            <button (click)="nextStep.emit()" class="px-8 py-2 rounded-full bg-primary text-white font-medium text-sm hover:bg-primary/90 transition-colors shadow-md shadow-primary/20 relative z-10">
+              {{ mode === 'onboarding' ? 'Next Step' : 'Submit' }}
+            </button>
+            
+            @if (mode === 'onboarding') {
+              <!-- Guided Tour Tooltip -->
+              <div class="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[280px] text-center animate-bounce z-20 whitespace-normal leading-relaxed">
+                ⏱️ Choose when your tasks should run automatically. Click Next to continue!
+                <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45"></div>
+              </div>
+              
+              <!-- Pulsing ring -->
+              <div class="absolute inset-0 rounded-full bg-primary/40 animate-ping z-0"></div>
+            }
+          </div>
         </footer>
       </div>
     </div>

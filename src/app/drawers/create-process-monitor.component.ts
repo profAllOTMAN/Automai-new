@@ -189,9 +189,22 @@ import { CommonModule } from '@angular/common';
 
         <!-- Footer Actions -->
         <footer class="border-t border-slate-200 p-6 bg-white flex justify-end">
-          <button (click)="nextStep.emit()" class="px-8 py-2 rounded-full bg-primary text-white font-medium text-sm hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-md shadow-primary/20">
-            Publish
-          </button>
+          <div class="relative inline-block">
+            <button (click)="nextStep.emit()" class="px-8 py-2 rounded-full bg-primary text-white font-medium text-sm hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-md shadow-primary/20 relative z-10">
+              Publish
+            </button>
+            
+            @if (mode === 'onboarding') {
+              <!-- Guided Tour Tooltip -->
+              <div class="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[280px] text-center animate-bounce z-20 whitespace-normal leading-relaxed">
+                🎉 Finally, link them together! Click Publish to activate your monitor.
+                <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45"></div>
+              </div>
+              
+              <!-- Pulsing ring -->
+              <div class="absolute inset-0 rounded-full bg-primary/40 animate-ping z-0"></div>
+            }
+          </div>
         </footer>
       </div>
     </div>

@@ -104,12 +104,6 @@
           <input type="text" id="searchMonitors" class="block w-full pl-10 pr-4 py-2 text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Search monitors..." />
         </div>
         <div class="flex items-center gap-3">
-          <button (click)="openDrawer('watcher', 'standalone')" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm">
-            <span class="material-symbols-outlined text-[18px]">desktop_windows</span> Add Watcher
-          </button>
-          <button (click)="openDrawer('schedule', 'standalone')" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm">
-            <span class="material-symbols-outlined text-[18px]">schedule</span> Add Schedule
-          </button>
           <button (click)="openDrawer('monitor', 'standalone')" class="px-4 py-2 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
             <span class="material-symbols-outlined text-[18px]">add</span> New Monitor
           </button>
@@ -146,6 +140,20 @@
                     }
                   </span>
                   <span class="text-[11px] text-slate-500">{{ monitor.message }}</span>
+                </div>
+                <div class="flex items-center gap-3 mt-1.5 text-[11px] text-slate-500">
+                  @if (monitor.scenarioAssigned) {
+                    <div class="flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[12px]">account_tree</span>
+                      <span>{{ monitor.scenarioAssigned }}</span>
+                    </div>
+                  }
+                  @if (monitor.projectLinked) {
+                    <div class="flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[12px]">folder</span>
+                      <span>{{ monitor.projectLinked }}</span>
+                    </div>
+                  }
                 </div>
               </div>
             </div>

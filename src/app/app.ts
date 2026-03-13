@@ -13,6 +13,8 @@ export interface ProcessMonitor {
   successRate: string;
   resources: string;
   message?: string;
+  scenarioAssigned?: string;
+  projectLinked?: string;
 }
 
 @Component({
@@ -38,30 +40,36 @@ export class App {
   monitors = signal<ProcessMonitor[]>([
     {
       id: '1',
-      name: 'Invoice Processing',
+      name: 'Process Notepad',
       status: 'running',
       lastRun: 'Just now',
       successRate: '100%',
       resources: '3 rWatchers',
-      message: 'Processing 50 items...'
+      message: 'Processing 50 items...',
+      scenarioAssigned: 'Notepad Data Entry',
+      projectLinked: 'Finance Automation'
     },
     {
       id: '2',
-      name: 'Daily Report Generation',
+      name: 'Process Salesforce Login',
       status: 'pending',
       lastRun: 'Yesterday 12:00 PM',
       successRate: '98%',
       resources: '1 rWatcher',
-      message: 'Scheduled for 12:00 PM'
+      message: 'Scheduled for 12:00 PM',
+      scenarioAssigned: 'SFDC Auth Flow',
+      projectLinked: 'Sales Ops'
     },
     {
       id: '3',
-      name: 'Legacy Data Sync',
+      name: 'Process Legacy Data Sync',
       status: 'disabled',
       lastRun: 'Oct 12, 2025',
       successRate: '--',
       resources: 'None',
-      message: 'Manually stopped'
+      message: 'Manually stopped',
+      scenarioAssigned: 'Mainframe Export',
+      projectLinked: 'IT Migration'
     }
   ]);
 

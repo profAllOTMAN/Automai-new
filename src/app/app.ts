@@ -36,6 +36,8 @@ export class App {
   completedSteps = signal<string[]>([]);
   activeTab = signal<'dashboard' | 'process-monitor'>('dashboard');
   showNotifications = signal<boolean>(false);
+  editingMonitorId = signal<string | null>(null);
+  monitorToDelete = signal<string | null>(null);
 
   monitors = signal<ProcessMonitor[]>([]);
 
@@ -64,6 +66,27 @@ export class App {
     this.activeDrawer.set(drawer);
   }
 
+  editMonitor(id: string) {
+    this.editingMonitorId.set(id);
+    this.openDrawer('monitor', 'standalone');
+  }
+
+  confirmDelete(id: string) {
+    this.monitorToDelete.set(id);
+  }
+
+  executeDelete() {
+    const id = this.monitorToDelete();
+    if (id) {
+      this.monitors.update(monitors => monitors.filter(m => m.id !== id));
+    }
+    this.monitorToDelete.set(null);
+  }
+
+  cancelDelete() {
+    this.monitorToDelete.set(null);
+  }
+
   startOnboarding() {
     if (!this.completedSteps().includes('watcher')) {
       this.openDrawer('watcher', 'onboarding');
@@ -83,23 +106,36 @@ export class App {
 
   closeDrawer() {
     this.activeDrawer.set(null);
+    this.editingMonitorId.set(null);
   }
 
   handleNextStep(currentStep: 'watcher' | 'schedule' | 'monitor') {
     if (this.drawerMode() === 'standalone') {
       if (currentStep === 'monitor') {
-        const newId = (this.monitors().length + 1).toString();
-        this.monitors.update(m => [...m, {
-          id: newId,
-          name: `Process Monitor ${newId}`,
-          status: 'pending',
-          lastRun: 'Never',
-          successRate: '--',
-          resources: '1 rWatcher',
-          message: 'Waiting for schedule',
-          scenarioAssigned: 'Custom Scenario',
-          projectLinked: 'My First Project'
-        }]);
+        const editId = this.editingMonitorId();
+        if (editId) {
+          // Update existing monitor
+          this.monitors.update(m => m.map(monitor => 
+            monitor.id === editId 
+              ? { ...monitor, name: monitor.name + ' (Edited)' } 
+              : monitor
+          ));
+          this.editingMonitorId.set(null);
+        } else {
+          // Create new monitor
+          const newId = (this.monitors().length + 1).toString();
+          this.monitors.update(m => [...m, {
+            id: newId,
+            name: `Process Monitor ${newId}`,
+            status: 'pending',
+            lastRun: 'Never',
+            successRate: '--',
+            resources: '1 rWatcher',
+            message: 'Waiting for schedule',
+            scenarioAssigned: 'Custom Scenario',
+            projectLinked: 'My First Project'
+          }]);
+        }
         this.activeTab.set('process-monitor');
       }
       this.closeDrawer();

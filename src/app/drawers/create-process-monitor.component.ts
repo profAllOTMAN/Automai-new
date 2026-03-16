@@ -30,8 +30,8 @@ import { CommonModule } from '@angular/common';
               <span class="material-symbols-outlined text-2xl">monitoring</span>
             </div>
             <div class="flex flex-col">
-              <h2 class="text-lg font-medium text-primary leading-tight">Create Process Monitor</h2>
-              <p class="text-xs text-slate-500">pm2 AW-5241</p>
+              <h2 class="text-lg font-medium text-primary leading-tight">{{ isEditing ? 'Edit Process Monitor' : 'Create Process Monitor' }}</h2>
+              <p class="text-xs text-slate-500">{{ monitorName || 'pm2 AW-5241' }}</p>
             </div>
           </div>
           <div class="flex items-center gap-4">
@@ -54,7 +54,7 @@ import { CommonModule } from '@angular/common';
             <div class="grid grid-cols-3 gap-4 mb-4">
               <div class="flex flex-col gap-1.5">
                 <label for="monitorName" class="text-sm font-medium text-slate-700">Process monitor name*</label>
-                <input type="text" id="monitorName" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" value="pm2" />
+                <input type="text" id="monitorName" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" [value]="monitorName || 'pm2'" />
               </div>
               <div class="flex flex-col gap-1.5">
                 <label for="project" class="text-sm font-medium text-slate-700">Project*</label>
@@ -191,7 +191,7 @@ import { CommonModule } from '@angular/common';
         <footer class="border-t border-slate-200 p-6 bg-white flex justify-end">
           <div class="relative inline-block">
             <button (click)="nextStep.emit()" class="px-8 py-2 rounded-full bg-primary text-white font-medium text-sm hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-md shadow-primary/20 relative z-10">
-              Publish
+              {{ isEditing ? 'Save Changes' : 'Publish' }}
             </button>
             
             @if (mode === 'onboarding') {
@@ -221,6 +221,8 @@ import { CommonModule } from '@angular/common';
 })
 export class CreateProcessMonitorDrawerComponent {
   @Input() mode: 'onboarding' | 'standalone' = 'standalone';
+  @Input() isEditing = false;
+  @Input() monitorName = '';
   @Output() closeDrawer = new EventEmitter<void>();
   @Output() nextStep = new EventEmitter<void>();
   @Output() openAddWatcher = new EventEmitter<void>();

@@ -87,6 +87,21 @@ export class App {
 
   handleNextStep(currentStep: 'watcher' | 'schedule' | 'monitor') {
     if (this.drawerMode() === 'standalone') {
+      if (currentStep === 'monitor') {
+        const newId = (this.monitors().length + 1).toString();
+        this.monitors.update(m => [...m, {
+          id: newId,
+          name: `Process Monitor ${newId}`,
+          status: 'pending',
+          lastRun: 'Never',
+          successRate: '--',
+          resources: '1 rWatcher',
+          message: 'Waiting for schedule',
+          scenarioAssigned: 'Custom Scenario',
+          projectLinked: 'My First Project'
+        }]);
+        this.activeTab.set('process-monitor');
+      }
       this.closeDrawer();
       return;
     }

@@ -226,6 +226,92 @@
             </div>
           </div>
         </div>
+
+        <!-- Third Row: rWatchers & Scenarios -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+          <!-- rWatchers List -->
+          <div class="lg:col-span-2 bg-white border border-slate-200 rounded-lg shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800">rWatchers Status</h3>
+              <button class="text-sm text-primary hover:underline font-medium">Manage</button>
+            </div>
+            <div class="p-0 overflow-x-auto">
+              <table class="w-full text-left text-sm text-slate-600">
+                <thead class="bg-slate-50 border-b border-slate-100 text-xs uppercase text-slate-500">
+                  <tr>
+                    <th class="px-6 py-3 font-medium">Name</th>
+                    <th class="px-6 py-3 font-medium">Status</th>
+                    <th class="px-6 py-3 font-medium">IP Address</th>
+                    <th class="px-6 py-3 font-medium">Last Ping</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-3 font-medium text-slate-800 flex items-center gap-2">
+                      <span class="material-symbols-outlined text-[16px] text-slate-400">desktop_windows</span> rWatcher001
+                    </td>
+                    <td class="px-6 py-3">
+                      <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium">
+                        <span class="size-1.5 rounded-full bg-emerald-500"></span> Online
+                      </span>
+                    </td>
+                    <td class="px-6 py-3 font-mono text-xs">192.168.1.105</td>
+                    <td class="px-6 py-3 text-xs">Just now</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-3 font-medium text-slate-800 flex items-center gap-2">
+                      <span class="material-symbols-outlined text-[16px] text-slate-400">desktop_windows</span> rWatcher002
+                    </td>
+                    <td class="px-6 py-3">
+                      <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-medium">
+                        <span class="size-1.5 rounded-full bg-slate-400"></span> Offline
+                      </span>
+                    </td>
+                    <td class="px-6 py-3 font-mono text-xs">192.168.1.106</td>
+                    <td class="px-6 py-3 text-xs">2 hours ago</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Scenarios -->
+          <div class="bg-white border border-slate-200 rounded-lg shadow-sm flex flex-col">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800">Scenarios</h3>
+              <button class="text-sm text-primary hover:underline font-medium">View all</button>
+            </div>
+            <div class="p-4 flex-1 flex flex-col gap-3">
+              <div class="flex items-center gap-3 p-3 border border-slate-100 rounded-lg hover:border-primary/30 hover:bg-primary/5 transition-colors cursor-pointer">
+                <div class="size-10 rounded bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">account_tree</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-sm font-bold text-slate-800">Notepad Data Entry</span>
+                  <span class="text-xs text-slate-500">v1.2 • 5 steps</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 p-3 border border-slate-100 rounded-lg hover:border-primary/30 hover:bg-primary/5 transition-colors cursor-pointer">
+                <div class="size-10 rounded bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">account_tree</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-sm font-bold text-slate-800">SFDC Auth Flow</span>
+                  <span class="text-xs text-slate-500">v2.0 • 12 steps</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 p-3 border border-slate-100 rounded-lg hover:border-primary/30 hover:bg-primary/5 transition-colors cursor-pointer">
+                <div class="size-10 rounded bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">account_tree</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-sm font-bold text-slate-800">Legacy Data Sync</span>
+                  <span class="text-xs text-slate-500">v1.0 • 8 steps</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     } @else if (activeTab() === 'process-monitor' && monitors().length > 0) {
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4 sm:mt-6 mb-4 sm:mb-6">

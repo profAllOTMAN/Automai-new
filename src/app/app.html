@@ -105,7 +105,129 @@
 
   <!-- Main Content -->
   <main class="flex-1 px-4 sm:px-6 pb-12 max-w-7xl mx-auto w-full">
-    @if (activeTab() === 'process-monitor' || completedSteps().includes('monitor')) {
+    @if (activeTab() === 'dashboard' && monitors().length > 0) {
+      <!-- Dashboard KPIs -->
+      <div class="mt-6 space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold text-slate-900">Overview</h2>
+          <button (click)="openDrawer('monitor', 'standalone')" class="px-4 py-2 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+            <span class="material-symbols-outlined text-[18px]">add</span> New Monitor
+          </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Total Monitors -->
+          <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-sm font-medium text-slate-500">Total Monitors</span>
+              <div class="size-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[18px]">monitoring</span>
+              </div>
+            </div>
+            <div class="text-3xl font-bold text-slate-900">{{ monitors().length }}</div>
+            <div class="mt-2 text-xs text-emerald-600 flex items-center gap-1 font-medium">
+              <span class="material-symbols-outlined text-[14px]">trending_up</span> +1 this week
+            </div>
+          </div>
+
+          <!-- Active rWatchers -->
+          <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-sm font-medium text-slate-500">Active rWatchers</span>
+              <div class="size-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[18px]">desktop_windows</span>
+              </div>
+            </div>
+            <div class="text-3xl font-bold text-slate-900">1</div>
+            <div class="mt-2 text-xs text-slate-500 flex items-center gap-1">
+              100% online
+            </div>
+          </div>
+
+          <!-- Success Rate -->
+          <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-sm font-medium text-slate-500">Avg Success Rate</span>
+              <div class="size-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[18px]">check_circle</span>
+              </div>
+            </div>
+            <div class="text-3xl font-bold text-slate-900">100%</div>
+            <div class="mt-2 text-xs text-slate-500 flex items-center gap-1">
+              Across all processes
+            </div>
+          </div>
+
+          <!-- Active Projects -->
+          <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-sm font-medium text-slate-500">Active Projects</span>
+              <div class="size-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[18px]">folder</span>
+              </div>
+            </div>
+            <div class="text-3xl font-bold text-slate-900">1</div>
+            <div class="mt-2 text-xs text-slate-500 flex items-center gap-1">
+              My First Project
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity & Bot Manager Status -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+          <div class="lg:col-span-2 bg-white border border-slate-200 rounded-lg shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800">Recent Activity</h3>
+              <button class="text-sm text-primary hover:underline font-medium">View all</button>
+            </div>
+            <div class="p-0">
+              <div class="flex items-start gap-4 p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                <div class="size-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[16px]">play_arrow</span>
+                </div>
+                <div>
+                  <p class="text-sm text-slate-800 font-medium">Process Notepad started</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Triggered by schedule '5 min'</p>
+                  <p class="text-[10px] text-slate-400 mt-1 font-medium">Just now</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4 p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                <div class="size-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[16px]">add</span>
+                </div>
+                <div>
+                  <p class="text-sm text-slate-800 font-medium">New Monitor Created</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Admin User created 'Process Notepad'</p>
+                  <p class="text-[10px] text-slate-400 mt-1 font-medium">2 mins ago</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-lg shadow-sm flex flex-col">
+            <div class="px-6 py-4 border-b border-slate-100">
+              <h3 class="font-bold text-slate-800">Bot Manager Status</h3>
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-center items-center text-center">
+              <div class="relative mb-4">
+                <div class="size-24 rounded-full border-4 border-emerald-100 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-4xl text-emerald-500">dns</span>
+                </div>
+                <div class="absolute bottom-0 right-0 size-6 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[12px] text-white font-bold">check</span>
+                </div>
+              </div>
+              <h4 class="font-bold text-slate-900 text-lg">Online & Healthy</h4>
+              <p class="text-sm text-slate-500 mt-2">BotManager-1 is connected and ready to dispatch tasks.</p>
+              <div class="mt-6 w-full bg-slate-50 rounded-md p-3 border border-slate-100 flex justify-between items-center">
+                <span class="text-xs font-medium text-slate-500">Ping</span>
+                <span class="text-xs font-bold text-emerald-600">24ms</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else if (activeTab() === 'process-monitor' && monitors().length > 0) {
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4 sm:mt-6 mb-4 sm:mb-6">
         <div class="relative w-full sm:max-w-md">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

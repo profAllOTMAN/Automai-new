@@ -37,41 +37,7 @@ export class App {
   activeTab = signal<'dashboard' | 'process-monitor'>('dashboard');
   showNotifications = signal<boolean>(false);
 
-  monitors = signal<ProcessMonitor[]>([
-    {
-      id: '1',
-      name: 'Process Notepad',
-      status: 'running',
-      lastRun: 'Just now',
-      successRate: '100%',
-      resources: '3 rWatchers',
-      message: 'Processing 50 items...',
-      scenarioAssigned: 'Notepad Data Entry',
-      projectLinked: 'Finance Automation'
-    },
-    {
-      id: '2',
-      name: 'Process Salesforce Login',
-      status: 'pending',
-      lastRun: 'Yesterday 12:00 PM',
-      successRate: '98%',
-      resources: '1 rWatcher',
-      message: 'Scheduled for 12:00 PM',
-      scenarioAssigned: 'SFDC Auth Flow',
-      projectLinked: 'Sales Ops'
-    },
-    {
-      id: '3',
-      name: 'Process Legacy Data Sync',
-      status: 'disabled',
-      lastRun: 'Oct 12, 2025',
-      successRate: '--',
-      resources: 'None',
-      message: 'Manually stopped',
-      scenarioAssigned: 'Mainframe Export',
-      projectLinked: 'IT Migration'
-    }
-  ]);
+  monitors = signal<ProcessMonitor[]>([]);
 
   toggleRunState(id: string) {
     this.monitors.update(monitors => monitors.map(m => {
@@ -140,8 +106,20 @@ export class App {
       } else if (currentStep === 'schedule') {
         this.activeDrawer.set('monitor');
       } else if (currentStep === 'monitor') {
+        // Add the first monitor
+        this.monitors.set([{
+          id: '1',
+          name: 'Process Notepad',
+          status: 'running',
+          lastRun: 'Just now',
+          successRate: '100%',
+          resources: '1 rWatcher',
+          message: 'Processing items...',
+          scenarioAssigned: 'Notepad Data Entry',
+          projectLinked: 'My First Project'
+        }]);
         this.activeDrawer.set(null);
-        this.activeTab.set('process-monitor');
+        this.activeTab.set('dashboard'); // Keep them on dashboard to see the new KPIs
       }
     } else {
       if (currentStep === 'watcher' || currentStep === 'schedule') {

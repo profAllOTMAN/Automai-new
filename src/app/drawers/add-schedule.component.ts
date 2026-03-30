@@ -35,6 +35,10 @@ import { CommonModule } from '@angular/common';
             </div>
           </div>
           <div class="flex items-center gap-4">
+            <button class="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-full transition-colors">
+              <span class="material-symbols-outlined text-[16px]">play_circle</span>
+              Watch Tutorial
+            </button>
             <button (click)="closeDrawer.emit()" class="flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 transition-colors">
               <span class="material-symbols-outlined text-xl">close</span>
             </button>

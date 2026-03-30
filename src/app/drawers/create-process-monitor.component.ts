@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -35,6 +35,10 @@ import { CommonModule } from '@angular/common';
             </div>
           </div>
           <div class="flex items-center gap-4">
+            <button class="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-full transition-colors">
+              <span class="material-symbols-outlined text-[16px]">play_circle</span>
+              Watch Tutorial
+            </button>
             <button (click)="closeDrawer.emit()" class="flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 transition-colors">
               <span class="material-symbols-outlined text-xl">close</span>
             </button>
@@ -86,7 +90,11 @@ import { CommonModule } from '@angular/common';
                 <div class="flex gap-2 items-center">
                   <div class="relative flex-1">
                     <select id="schedule" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
-                      <option>5 min</option>
+                      <option>Every 5 minutes</option>
+                      <option>Every 15 minutes</option>
+                      <option>Hourly</option>
+                      <option>Daily at 00:00</option>
+                      <option>Weekly on Sunday</option>
                     </select>
                     <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
                       <span class="material-symbols-outlined text-slate-500 text-sm">arrow_drop_down</span>
@@ -133,8 +141,9 @@ import { CommonModule } from '@angular/common';
             <div class="w-1/2 flex flex-col gap-1.5 mb-4">
               <label for="distributionType" class="text-sm font-medium text-slate-700">Select distribution type to be used in this test</label>
               <div class="relative">
-                <select id="distributionType" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
-                  <option>Selected rWatcher</option>
+                <select id="distributionType" (change)="distributionType.set($any($event.target).value)" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
+                  <option value="individual">Individual rWatchers</option>
+                  <option value="group">rWatcher Groups</option>
                 </select>
                 <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
                   <span class="material-symbols-outlined text-slate-500 text-sm">arrow_drop_down</span>
@@ -143,18 +152,30 @@ import { CommonModule } from '@angular/common';
             </div>
 
             <div class="border border-slate-300 rounded-md p-4">
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-slate-500 text-sm font-medium block">Select locations</span>
-                <button type="button" (click)="openAddWatcher.emit()" class="flex items-center gap-1 text-sm text-primary hover:underline font-medium">
-                  <span class="material-symbols-outlined text-[16px]">add</span> New Watcher
-                </button>
-              </div>
-              <div class="flex flex-wrap gap-2">
-                <div class="flex items-center gap-1 bg-slate-100 border border-slate-200 rounded-full px-3 py-1.5 text-sm text-slate-700">
-                  rWatcher001 <span class="material-symbols-outlined text-[16px] cursor-pointer text-slate-400 hover:text-slate-600">cancel</span>
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between">
+                  <label class="text-slate-700 text-sm font-medium block">
+                    {{ distributionType() === 'group' ? 'Select Group' : 'Select rWatcher' }}
+                  </label>
+                  <button type="button" (click)="openAddWatcher.emit()" class="flex items-center gap-1 text-sm text-primary hover:underline font-medium">
+                    <span class="material-symbols-outlined text-[16px]">add</span> New Watcher
+                  </button>
                 </div>
-                <div class="flex items-center gap-1 bg-slate-100 border border-slate-200 rounded-full px-3 py-1.5 text-sm text-slate-700">
-                  rWatcher002 <span class="material-symbols-outlined text-[16px] cursor-pointer text-slate-400 hover:text-slate-600">cancel</span>
+                <div class="relative">
+                  <select class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
+                    @if (distributionType() === 'group') {
+                      <option>All Windows Servers</option>
+                      <option>Finance Department</option>
+                      <option>European Region</option>
+                    } @else {
+                      <option>rWatcher001 (192.168.1.105)</option>
+                      <option>rWatcher002 (192.168.1.106)</option>
+                      <option>rWatcher003 (10.0.0.5)</option>
+                    }
+                  </select>
+                  <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
+                    <span class="material-symbols-outlined text-slate-500 text-sm">arrow_drop_down</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -227,4 +248,6 @@ export class CreateProcessMonitorDrawerComponent {
   @Output() nextStep = new EventEmitter<void>();
   @Output() openAddWatcher = new EventEmitter<void>();
   @Output() openAddSchedule = new EventEmitter<void>();
+
+  distributionType = signal<'individual' | 'group'>('individual');
 }

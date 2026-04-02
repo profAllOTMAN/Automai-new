@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -7,9 +7,9 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex justify-end z-50">
-      <div class="w-full max-w-[600px] bg-white h-full shadow-2xl flex flex-col animate-slide-in">
-        
-        <!-- Full Width Stepper (Onboarding Mode) -->
+      <div class="w-full max-w-[560px] bg-white h-full shadow-2xl flex flex-col animate-slide-in">
+
+        <!-- Onboarding Stepper -->
         @if (mode === 'onboarding') {
           <div class="w-full bg-slate-50 border-b border-slate-200 px-6 py-3 flex items-center justify-between">
             <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">In progress (2/3)</span>
@@ -24,169 +24,177 @@ import { CommonModule } from '@angular/common';
         }
 
         <!-- Header -->
-        <header class="flex items-center justify-between border-b border-slate-200 px-6 py-4 bg-white">
-          <div class="flex items-center gap-3 text-slate-900">
-            <div class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-lg text-primary">
-              <span class="material-symbols-outlined text-2xl">schedule</span>
-            </div>
-            <div class="flex flex-col">
-              <h2 class="text-lg font-medium text-primary leading-tight">New schedule</h2>
-              <p class="text-xs text-slate-500">Schedule jobs to run automatically</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-4">
-            <button class="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-full transition-colors">
-              <span class="material-symbols-outlined text-[16px]">play_circle</span>
-              Watch Tutorial
-            </button>
-            <button (click)="closeDrawer.emit()" class="flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 transition-colors">
-              <span class="material-symbols-outlined text-xl">close</span>
-            </button>
-          </div>
+        <header class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white">
+          <h2 class="text-lg font-bold text-slate-900">New Schedule</h2>
+          <button (click)="closeDrawer.emit()" class="flex items-center justify-center text-slate-400 hover:text-slate-600 rounded-full h-8 w-8 transition-colors">
+            <span class="material-symbols-outlined text-xl">close</span>
+          </button>
         </header>
 
         <!-- Scrollable Content -->
-        <div class="flex-1 overflow-y-auto custom-scrollbar p-6 bg-white space-y-8">
-          
-          <!-- BASIC INFORMATION -->
-          <div class="space-y-4">
-            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">BASIC INFORMATION</h3>
-            <div class="flex flex-col gap-1.5">
-              <label for="scheduleName" class="text-sm font-medium text-slate-700">Schedule Name*</label>
-              <input type="text" id="scheduleName" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
-            </div>
-            <div class="flex flex-col gap-1.5 mt-4">
-              <label for="description" class="text-sm font-medium text-slate-700">Description</label>
-              <textarea id="description" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-y min-h-[80px]"></textarea>
-            </div>
-          </div>
+        <div class="flex-1 overflow-y-auto custom-scrollbar divide-y divide-slate-100">
 
-          <!-- TIMEZONE CONFIGURATION -->
-          <div class="space-y-4">
-            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">TIMEZONE CONFIGURATION</h3>
+          <!-- BASIC INFORMATION -->
+          <section class="px-6 py-5">
+            <div class="mb-4">
+              <span class="text-[11px] font-bold tracking-widest text-primary uppercase">Basic Information</span>
+              <p class="text-slate-500 text-xs mt-0.5">Name and describe this schedule for easy identification.</p>
+            </div>
+            <div class="flex flex-col gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-slate-700">Schedule Name <span class="text-red-400">*</span></label>
+                <input type="text" placeholder="e.g. Business Hours – Every 15 min" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-slate-400" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-slate-700">Description <span class="text-slate-400 font-normal">(optional)</span></label>
+                <textarea rows="2" placeholder="Briefly describe when and why this schedule runs..." class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none placeholder-slate-400"></textarea>
+              </div>
+            </div>
+          </section>
+
+          <!-- TIMEZONE -->
+          <section class="px-6 py-5">
+            <div class="mb-4">
+              <span class="text-[11px] font-bold tracking-widest text-primary uppercase">Timezone</span>
+              <p class="text-slate-500 text-xs mt-0.5">All schedule times are interpreted in this timezone.</p>
+            </div>
             <div class="flex flex-col gap-1.5">
-              <label for="timezone" class="text-sm font-medium text-slate-700">Schedule Timezone</label>
+              <label class="text-sm font-medium text-slate-700">Schedule Timezone</label>
               <div class="relative">
-                <select id="timezone" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
+                <div class="absolute left-3 top-0 bottom-0 flex items-center pointer-events-none">
+                  <span class="material-symbols-outlined text-slate-400 text-[18px]">public</span>
+                </div>
+                <select class="block pl-9 pr-10 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
                   <option>UTC</option>
-                  <option>Pacific Time</option>
-                  <option>Eastern Time</option>
+                  <option>Pacific Time (UTC-8)</option>
+                  <option>Eastern Time (UTC-5)</option>
+                  <option>Central European Time (UTC+1)</option>
                 </select>
                 <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
-                  <span class="material-symbols-outlined text-slate-500 text-sm">arrow_drop_down</span>
+                  <span class="material-symbols-outlined text-slate-400 text-[20px]">expand_more</span>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
           <!-- SCHEDULE TYPE -->
-          <div class="space-y-4">
-            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">SCHEDULE TYPE</h3>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="border-2 border-primary bg-primary/5 rounded p-4 cursor-pointer">
-                <div class="font-medium text-slate-800 text-sm mb-1">Interval</div>
-                <div class="text-xs text-slate-500">Run repeatedly every X minutes/hours</div>
-              </div>
-              <div class="border border-slate-200 rounded p-4 cursor-pointer hover:border-primary/50 transition-colors">
-                <div class="font-medium text-slate-800 text-sm mb-1">Fixed Times</div>
-                <div class="text-xs text-slate-500">Run at specific times each day</div>
-              </div>
+          <section class="px-6 py-5">
+            <div class="mb-4">
+              <span class="text-[11px] font-bold tracking-widest text-primary uppercase">Schedule Type</span>
+              <p class="text-slate-500 text-xs mt-0.5">Choose how the schedule repeats.</p>
             </div>
-          </div>
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                (click)="scheduleType.set('interval')"
+                [class]="scheduleType() === 'interval'
+                  ? 'flex flex-col gap-1 p-4 rounded-lg border-2 border-primary bg-primary/5 text-left transition-all'
+                  : 'flex flex-col gap-1 p-4 rounded-lg border border-slate-200 bg-white text-left hover:border-slate-300 transition-all'"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]" [class]="scheduleType() === 'interval' ? 'text-primary' : 'text-slate-400'">repeat</span>
+                  <span class="text-sm font-semibold" [class]="scheduleType() === 'interval' ? 'text-primary' : 'text-slate-700'">Interval</span>
+                </div>
+                <p class="text-xs text-slate-500">Run every X minutes or hours</p>
+              </button>
+              <button
+                type="button"
+                (click)="scheduleType.set('fixed')"
+                [class]="scheduleType() === 'fixed'
+                  ? 'flex flex-col gap-1 p-4 rounded-lg border-2 border-primary bg-primary/5 text-left transition-all'
+                  : 'flex flex-col gap-1 p-4 rounded-lg border border-slate-200 bg-white text-left hover:border-slate-300 transition-all'"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[18px]" [class]="scheduleType() === 'fixed' ? 'text-primary' : 'text-slate-400'">schedule</span>
+                  <span class="text-sm font-semibold" [class]="scheduleType() === 'fixed' ? 'text-primary' : 'text-slate-700'">Fixed Times</span>
+                </div>
+                <p class="text-xs text-slate-500">Run at specific times each day</p>
+              </button>
+            </div>
+          </section>
 
           <!-- INTERVAL CONFIGURATION -->
-          <div class="space-y-4 pt-4 border-t border-slate-200">
-            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">INTERVAL CONFIGURATION</h3>
-            <div class="grid grid-cols-3 gap-4">
-              <div class="flex flex-col gap-1.5">
-                <label for="intervalValue" class="text-sm font-medium text-slate-700">Interval Value</label>
-                <div class="relative">
-                  <select id="intervalValue" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
-                    <option>10</option>
-                    <option>15</option>
-                    <option>30</option>
-                  </select>
-                  <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
-                    <span class="material-symbols-outlined text-slate-500 text-sm">arrow_drop_down</span>
+          @if (scheduleType() === 'interval') {
+            <section class="px-6 py-5">
+              <div class="mb-4">
+                <span class="text-[11px] font-bold tracking-widest text-primary uppercase">Interval Configuration</span>
+              </div>
+              <div class="grid grid-cols-3 gap-4">
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-sm font-medium text-slate-700">Every</label>
+                  <div class="relative">
+                    <select class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
+                      <option>5</option>
+                      <option>10</option>
+                      <option>15</option>
+                      <option>30</option>
+                      <option>60</option>
+                    </select>
+                    <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
+                      <span class="material-symbols-outlined text-slate-400 text-[20px]">expand_more</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="flex flex-col gap-1.5">
-                <label for="intervalUnit" class="text-sm font-medium text-slate-700">Interval Unit</label>
-                <div class="relative">
-                  <select id="intervalUnit" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
-                    <option>Minutes</option>
-                    <option>Hours</option>
-                  </select>
-                  <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
-                    <span class="material-symbols-outlined text-slate-500 text-sm">arrow_drop_down</span>
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-sm font-medium text-slate-700">Unit</label>
+                  <div class="relative">
+                    <select class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
+                      <option>Minutes</option>
+                      <option>Hours</option>
+                    </select>
+                    <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
+                      <span class="material-symbols-outlined text-slate-400 text-[20px]">expand_more</span>
+                    </div>
                   </div>
                 </div>
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-sm font-medium text-slate-700">Offset (min)</label>
+                  <input type="number" value="0" min="0" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
+                </div>
               </div>
-              <div class="flex flex-col gap-1.5">
-                <label for="offsetMinutes" class="text-sm font-medium text-slate-700">Offset Minutes</label>
-                <input type="text" id="offsetMinutes" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" value="0" />
-              </div>
-            </div>
-          </div>
+            </section>
+          }
 
           <!-- ACTIVE DAYS -->
-          <div class="space-y-4 pt-4 border-t border-slate-200">
-            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">ACTIVE DAYS</h3>
-            <div class="text-slate-600 text-sm mb-2">Run on these days</div>
-            <div class="flex border border-slate-300 rounded overflow-hidden">
-              <label class="flex-1 flex items-center justify-center gap-1 py-2 border-r border-slate-300 bg-slate-100 cursor-pointer hover:bg-slate-200 transition-colors">
-                <input type="checkbox" checked class="accent-primary"/>
-                <span class="text-xs font-medium text-slate-700">Mon</span>
-              </label>
-              <label class="flex-1 flex items-center justify-center gap-1 py-2 border-r border-slate-300 bg-slate-100 cursor-pointer hover:bg-slate-200 transition-colors">
-                <input type="checkbox" checked class="accent-primary"/>
-                <span class="text-xs font-medium text-slate-700">Tue</span>
-              </label>
-              <label class="flex-1 flex items-center justify-center gap-1 py-2 border-r border-slate-300 bg-slate-100 cursor-pointer hover:bg-slate-200 transition-colors">
-                <input type="checkbox" checked class="accent-primary"/>
-                <span class="text-xs font-medium text-slate-700">Wed</span>
-              </label>
-              <label class="flex-1 flex items-center justify-center gap-1 py-2 border-r border-slate-300 bg-slate-100 cursor-pointer hover:bg-slate-200 transition-colors">
-                <input type="checkbox" checked class="accent-primary"/>
-                <span class="text-xs font-medium text-slate-700">Thu</span>
-              </label>
-              <label class="flex-1 flex items-center justify-center gap-1 py-2 border-r border-slate-300 bg-slate-100 cursor-pointer hover:bg-slate-200 transition-colors">
-                <input type="checkbox" checked class="accent-primary"/>
-                <span class="text-xs font-medium text-slate-700">Fri</span>
-              </label>
-              <label class="flex-1 flex items-center justify-center gap-1 py-2 border-r border-slate-300 bg-slate-100 cursor-pointer hover:bg-slate-200 transition-colors">
-                <input type="checkbox" checked class="accent-primary"/>
-                <span class="text-xs font-medium text-slate-700">Sat</span>
-              </label>
-              <label class="flex-1 flex items-center justify-center gap-1 py-2 bg-slate-100 cursor-pointer hover:bg-slate-200 transition-colors">
-                <input type="checkbox" checked class="accent-primary"/>
-                <span class="text-xs font-medium text-slate-700">Sun</span>
-              </label>
+          <section class="px-6 py-5">
+            <div class="mb-4">
+              <span class="text-[11px] font-bold tracking-widest text-primary uppercase">Active Days</span>
+              <p class="text-slate-500 text-xs mt-0.5">Select the days this schedule is active.</p>
             </div>
-          </div>
+            <div class="grid grid-cols-7 gap-2">
+              @for (day of days; track day.short) {
+                <label class="flex flex-col items-center gap-1.5 cursor-pointer group">
+                  <input type="checkbox" [checked]="day.checked" class="sr-only peer" />
+                  <div class="w-full py-2.5 rounded-lg border border-slate-200 bg-white text-center text-xs font-semibold text-slate-500 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary group-hover:border-primary/40 transition-all select-none">
+                    {{ day.short }}
+                  </div>
+                </label>
+              }
+            </div>
+          </section>
 
         </div>
 
-        <!-- Footer Actions -->
-        <footer class="p-6 bg-white flex justify-end border-t border-slate-200">
+        <!-- Footer -->
+        <footer class="border-t border-slate-100 px-6 py-4 bg-white flex items-center justify-end gap-3">
+          <button (click)="closeDrawer.emit()" class="px-5 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+            Cancel
+          </button>
           <div class="relative inline-block">
-            <button (click)="nextStep.emit()" class="px-8 py-2 rounded-full bg-primary text-white font-medium text-sm hover:bg-primary/90 transition-colors shadow-md shadow-primary/20 relative z-10">
-              {{ mode === 'onboarding' ? 'Next Step' : 'Submit' }}
+            <button (click)="nextStep.emit()" class="px-5 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20 relative z-10">
+              <span class="material-symbols-outlined text-[16px]">schedule</span>
+              {{ mode === 'onboarding' ? 'Next Step' : 'Save Schedule' }}
             </button>
-            
             @if (mode === 'onboarding') {
-              <!-- Guided Tour Tooltip -->
-              <div class="absolute bottom-full mb-4 right-0 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[280px] text-center animate-bounce z-20 whitespace-normal leading-relaxed">
+              <div class="absolute bottom-full mb-4 right-0 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[260px] text-center animate-bounce z-20 whitespace-normal leading-relaxed">
                 ⏱️ Choose when your tasks should run automatically. Click Next to continue!
                 <div class="absolute -bottom-1.5 right-8 w-3 h-3 bg-slate-800 rotate-45"></div>
               </div>
-              
-              <!-- Pulsing ring -->
-              <div class="absolute inset-0 rounded-full bg-primary/40 animate-ping z-0"></div>
+              <div class="absolute inset-0 rounded-lg bg-primary/40 animate-ping z-0"></div>
             }
           </div>
         </footer>
+
       </div>
     </div>
   `,
@@ -204,4 +212,16 @@ export class AddScheduleDrawerComponent {
   @Input() mode: 'onboarding' | 'standalone' = 'standalone';
   @Output() closeDrawer = new EventEmitter<void>();
   @Output() nextStep = new EventEmitter<void>();
+
+  scheduleType = signal<'interval' | 'fixed'>('interval');
+
+  days = [
+    { short: 'Mon', checked: true },
+    { short: 'Tue', checked: true },
+    { short: 'Wed', checked: true },
+    { short: 'Thu', checked: true },
+    { short: 'Fri', checked: true },
+    { short: 'Sat', checked: false },
+    { short: 'Sun', checked: false },
+  ];
 }

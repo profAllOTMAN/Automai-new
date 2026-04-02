@@ -15,10 +15,11 @@
             <span class="absolute top-1.5 sm:top-2 right-1.5 sm:right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
           
-          @if (!completedSteps().includes('notifications')) {
+          @if (!completedSteps().includes('notifications') && !tourSkipped()) {
             <!-- Guided Tour Tooltip -->
             <div class="absolute top-full mt-4 right-0 sm:-right-2 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[280px] text-center animate-bounce z-50 whitespace-normal leading-relaxed">
               🔔 You have a new message! Check out the script you just received from Scenario Builder.
+              <button (click)="skipTour(); $event.stopPropagation()" class="mt-2 block mx-auto text-xs text-slate-400 hover:text-white underline cursor-pointer transition-colors">Skip Tour</button>
               <div class="absolute -top-1.5 right-4 w-3 h-3 bg-slate-800 rotate-45"></div>
             </div>
             <!-- Pulsing ring -->
@@ -88,7 +89,9 @@
       <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2" href="#">
         <span class="material-symbols-outlined text-[20px]">assessment</span> Reports
       </a>
-      <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2" href="#">
+      <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 flex items-center gap-2"
+         [ngClass]="activeTab() === 'rwatchers' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'"
+         href="#" (click)="activeTab.set('rwatchers'); $event.preventDefault()">
         <span class="material-symbols-outlined text-[20px]">visibility</span> rWatchers
       </a>
       <a class="py-4 px-1 text-sm font-medium transition-colors border-b-2 border-transparent text-slate-500 hover:text-slate-700 flex items-center gap-2" href="#">
@@ -133,18 +136,18 @@
           <!-- Active rWatchers -->
           <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm flex flex-col">
             <div class="flex items-center justify-between mb-4">
-              <span class="text-sm font-medium text-slate-500">Active rWatchers</span>
+              <span class="text-sm font-medium text-slate-500">Online rWatchers</span>
               <div class="size-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <span class="material-symbols-outlined text-[18px]">desktop_windows</span>
               </div>
             </div>
-            <div class="text-3xl font-bold text-slate-900">1</div>
-            <div class="mt-2 text-xs text-slate-500 flex items-center gap-1">
-              100% online
+            <div class="text-3xl font-bold text-slate-900">1 <span class="text-base font-normal text-slate-400">/ 2</span></div>
+            <div class="mt-2 text-xs text-amber-600 flex items-center gap-1 font-medium">
+              <span class="material-symbols-outlined text-[14px]">warning</span> 1 watcher offline
             </div>
           </div>
 
-          <!-- Success Rate -->
+          <!-- Avg Success Rate -->
           <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm flex flex-col">
             <div class="flex items-center justify-between mb-4">
               <span class="text-sm font-medium text-slate-500">Avg Success Rate</span>
@@ -153,22 +156,22 @@
               </div>
             </div>
             <div class="text-3xl font-bold text-slate-900">100%</div>
-            <div class="mt-2 text-xs text-slate-500 flex items-center gap-1">
-              Across all processes
+            <div class="mt-2 text-xs text-emerald-600 flex items-center gap-1 font-medium">
+              <span class="material-symbols-outlined text-[14px]">trending_up</span> Across all monitors
             </div>
           </div>
 
-          <!-- Active Projects -->
+          <!-- Active Schedules -->
           <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm flex flex-col">
             <div class="flex items-center justify-between mb-4">
-              <span class="text-sm font-medium text-slate-500">Active Projects</span>
+              <span class="text-sm font-medium text-slate-500">Active Schedules</span>
               <div class="size-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
-                <span class="material-symbols-outlined text-[18px]">folder</span>
+                <span class="material-symbols-outlined text-[18px]">calendar_today</span>
               </div>
             </div>
-            <div class="text-3xl font-bold text-slate-900">1</div>
+            <div class="text-3xl font-bold text-slate-900">2</div>
             <div class="mt-2 text-xs text-slate-500 flex items-center gap-1">
-              My First Project
+              Across all monitors
             </div>
           </div>
         </div>
@@ -205,23 +208,36 @@
           </div>
 
           <div class="bg-white border border-slate-200 rounded-lg shadow-sm flex flex-col">
-            <div class="px-6 py-4 border-b border-slate-100">
-              <h3 class="font-bold text-slate-800">Bot Manager Status</h3>
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800">BotManagers</h3>
+              <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">1 of 2 available</span>
             </div>
-            <div class="p-6 flex-1 flex flex-col justify-center items-center text-center">
-              <div class="relative mb-4">
-                <div class="size-24 rounded-full border-4 border-emerald-100 flex items-center justify-center">
-                  <span class="material-symbols-outlined text-4xl text-emerald-500">dns</span>
+            <div class="p-4 flex-1 flex flex-col gap-2">
+              <!-- BotManager-1: Online -->
+              <div class="flex items-center gap-3 p-3 rounded-lg border border-emerald-100 bg-emerald-50/50">
+                <div class="size-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[16px] text-emerald-600">dns</span>
                 </div>
-                <div class="absolute bottom-0 right-0 size-6 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center">
-                  <span class="material-symbols-outlined text-[12px] text-white font-bold">check</span>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-slate-800">BotManager-1</p>
+                  <p class="text-xs text-slate-500">Ready to dispatch tasks</p>
                 </div>
+                <span class="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 shrink-0">
+                  <span class="size-1.5 rounded-full bg-emerald-500"></span> Online
+                </span>
               </div>
-              <h4 class="font-bold text-slate-900 text-lg">Online & Healthy</h4>
-              <p class="text-sm text-slate-500 mt-2">BotManager-1 is connected and ready to dispatch tasks.</p>
-              <div class="mt-6 w-full bg-slate-50 rounded-md p-3 border border-slate-100 flex justify-between items-center">
-                <span class="text-xs font-medium text-slate-500">Ping</span>
-                <span class="text-xs font-bold text-emerald-600">24ms</span>
+              <!-- BotManager-2: Offline -->
+              <div class="flex items-center gap-3 p-3 rounded-lg border border-slate-100 bg-slate-50">
+                <div class="size-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[16px] text-slate-400">dns</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-slate-600">BotManager-2</p>
+                  <p class="text-xs text-slate-400">Last seen 3 hours ago</p>
+                </div>
+                <span class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 shrink-0">
+                  <span class="size-1.5 rounded-full bg-slate-400"></span> Offline
+                </span>
               </div>
             </div>
           </div>
@@ -443,179 +459,493 @@
           </div>
         }
       </div>
-    } @else {
-      <div class="bg-white border border-slate-200 p-4 sm:p-8 lg:p-12 min-h-[500px] flex flex-col shadow-sm rounded">
-        <!-- Header -->
-        <div class="flex flex-col items-center mb-8 sm:mb-10 text-center">
-          <div class="bg-primary/5 size-16 sm:size-20 rounded-full flex items-center justify-center mb-4 sm:mb-6 text-primary">
-            <span class="material-symbols-outlined text-3xl sm:text-4xl">rocket_launch</span>
+    } @else if (activeTab() === 'rwatchers') {
+      <!-- rWatchers Page -->
+      <div class="mt-6 space-y-6">
+        <!-- Page Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900">rWatchers</h2>
+            <p class="text-sm text-slate-500 mt-1">Manage the machines that execute your automated processes.</p>
           </div>
-          <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2">Welcome to Automai Watcher</h2>
-          <p class="text-sm sm:text-base text-slate-500 max-w-lg leading-relaxed">
-            No data is available yet. Complete these steps to start monitoring your processes and receive real-time alerts.
-          </p>
-          
-          <!-- Launch First Process Button (Moved to top) -->
-          <div class="mt-6 sm:mt-8 w-full sm:w-auto relative inline-block">
-            <button (click)="startOnboarding()" class="w-full sm:w-auto justify-center bg-primary hover:bg-primary/90 text-white font-bold py-3 sm:py-3.5 px-6 sm:px-10 shadow-lg shadow-primary/25 transition-all flex items-center gap-2 transform hover:scale-105 active:scale-95 rounded relative z-10">
-              <span class="material-symbols-outlined">rocket_launch</span> Launch First Process
-            </button>
-            
-            @if (completedSteps().includes('notifications') && !completedSteps().includes('watcher')) {
-              <!-- Guided Tour Tooltip -->
-              <div class="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[280px] text-center animate-bounce z-20 whitespace-normal leading-relaxed">
-                👋 Let's set up your first automated process together!
-                <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45"></div>
-              </div>
-              
-              <!-- Pulsing ring -->
-              <div class="absolute inset-0 rounded bg-primary/40 animate-ping z-0"></div>
-            }
+          <button (click)="openDrawer('watcher', 'standalone')" class="w-full sm:w-auto justify-center px-4 py-2 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+            <span class="material-symbols-outlined text-[18px]">add</span> Add rWatcher
+          </button>
+        </div>
+
+        <!-- Summary KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">check_circle</span>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-slate-900">{{ onlineRWatcherCount() }}</p>
+              <p class="text-xs font-medium text-slate-500">Online</p>
+            </div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">sync</span>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-slate-900">{{ busyRWatcherCount() }}</p>
+              <p class="text-xs font-medium text-slate-500">Busy</p>
+            </div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex items-center gap-4">
+            <div class="size-10 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[20px]">cloud_off</span>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-slate-900">{{ offlineRWatcherCount() }}</p>
+              <p class="text-xs font-medium text-slate-500">Offline</p>
+            </div>
           </div>
         </div>
 
-        <!-- Two Column Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl mx-auto mt-4">
-          
-          <!-- Left Side: Onboarding Checklist -->
-          <div class="flex flex-col">
-            <div class="bg-slate-50 p-6 border border-slate-100 text-left rounded h-full">
-              <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6">Onboarding Checklist</h3>
-              
-              <div class="space-y-4">
-                <!-- Step 1: Completed -->
-                <div class="flex items-start gap-4 p-4 bg-emerald-50/50 border border-emerald-100 rounded relative overflow-hidden">
-                  <div class="size-6 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5">
-                    <span class="material-symbols-outlined text-sm font-bold">check</span>
-                  </div>
-                  <div class="flex flex-col w-full">
-                    <div class="flex items-center justify-between">
-                      <span class="font-bold text-slate-700">Step 1: Register Bot Manager</span>
-                      <a href="#" class="text-xs text-primary hover:underline flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]">menu_book</span> Guide
-                      </a>
-                    </div>
-                    <div class="flex flex-col gap-2 mt-3">
-                      <div class="flex items-center gap-2 text-sm text-slate-600">
-                        <span class="size-1.5 rounded-full bg-emerald-500"></span> 
-                        <span class="line-through">Script received from Scenario Builder</span>
-                        <span class="material-symbols-outlined text-[14px] text-emerald-500 ml-auto">check_circle</span>
-                      </div>
-                      <div class="flex items-center gap-2 text-sm text-slate-600">
-                        <span class="size-1.5 rounded-full bg-emerald-500"></span> 
-                        <span class="line-through">Bot agent installed automatically</span>
-                        <span class="material-symbols-outlined text-[14px] text-emerald-500 ml-auto">check_circle</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        <!-- Search Bar -->
+        <div class="relative w-full sm:max-w-md">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="material-symbols-outlined text-slate-400 text-[20px]">search</span>
+          </div>
+          <input type="text" [value]="rwatcherSearch()" (input)="rwatcherSearch.set($any($event.target).value)" class="block w-full pl-10 pr-4 py-2 text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" placeholder="Search by alias, IP, or BotManager..." />
+        </div>
 
-                <!-- Step 2: In Progress -->
-                <div class="flex items-start gap-4 p-4 border shadow-sm rounded transition-colors"
-                     [class.border-emerald-100]="completedSteps().includes('watcher') && completedSteps().includes('schedule')"
-                     [class.bg-emerald-50]="completedSteps().includes('watcher') && completedSteps().includes('schedule')"
-                     [class.border-primary/30]="!(completedSteps().includes('watcher') && completedSteps().includes('schedule'))"
-                     [class.bg-primary/5]="!(completedSteps().includes('watcher') && completedSteps().includes('schedule'))">
-                  
-                  @if (completedSteps().includes('watcher') && completedSteps().includes('schedule')) {
-                    <div class="size-6 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5">
-                      <span class="material-symbols-outlined text-sm font-bold">check</span>
-                    </div>
-                  } @else {
-                    <div class="size-6 rounded-full border-2 border-primary flex items-center justify-center mt-0.5 shrink-0">
-                      <div class="size-2.5 bg-primary rounded-full"></div>
-                    </div>
-                  }
-                  
-                  <div class="flex flex-col w-full">
-                    <div class="flex items-center justify-between">
-                      <span class="font-bold text-slate-900">Step 2: Configure Watcher</span>
-                      <a href="#" class="text-xs text-primary hover:underline flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]">menu_book</span> Guide
-                      </a>
-                    </div>
-                    <div class="flex flex-col gap-2 mt-3">
-                      <div class="flex items-center gap-2 text-sm text-slate-600">
-                        <span class="size-1.5 rounded-full" [ngClass]="completedSteps().includes('watcher') ? 'bg-emerald-500' : 'bg-slate-300'"></span> 
-                        <button (click)="openDrawer('watcher', 'onboarding')" class="hover:text-primary hover:underline cursor-pointer transition-colors" [class.line-through]="completedSteps().includes('watcher')">Add Watcher</button>
-                        @if (completedSteps().includes('watcher')) {
-                          <span class="material-symbols-outlined text-[14px] text-emerald-500 ml-auto">check_circle</span>
+        <!-- rWatcher Cards List -->
+        <div class="flex flex-col gap-3">
+          @for (watcher of filteredRWatchers(); track watcher.id) {
+            <div class="bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                 [class.border-l-emerald-400]="watcher.status === 'online'"
+                 [class.border-l-blue-400]="watcher.status === 'busy'"
+                 [class.border-l-slate-300]="watcher.status === 'offline'"
+                 style="border-left-width: 3px;">
+
+              <!-- Main Row -->
+              <div class="p-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                <!-- Identity & Status -->
+                <div class="flex items-start sm:items-center gap-4 w-full xl:w-auto xl:min-w-[280px]">
+                  <div class="size-10 flex items-center justify-center rounded-md shrink-0"
+                       [class.bg-emerald-50]="watcher.status === 'online'" [class.text-emerald-600]="watcher.status === 'online'"
+                       [class.bg-blue-50]="watcher.status === 'busy'" [class.text-blue-600]="watcher.status === 'busy'"
+                       [class.bg-slate-100]="watcher.status === 'offline'" [class.text-slate-500]="watcher.status === 'offline'">
+                    <span class="material-symbols-outlined">desktop_windows</span>
+                  </div>
+                  <div class="flex flex-col min-w-0">
+                    <h3 class="font-bold text-slate-900 text-sm">{{ watcher.alias }}</h3>
+                    <div class="flex items-center gap-2 mt-0.5">
+                      <span class="flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-md"
+                            [class.text-emerald-700]="watcher.status === 'online'" [class.bg-emerald-100]="watcher.status === 'online'"
+                            [class.text-blue-700]="watcher.status === 'busy'" [class.bg-blue-100]="watcher.status === 'busy'"
+                            [class.text-slate-600]="watcher.status === 'offline'" [class.bg-slate-100]="watcher.status === 'offline'">
+                        @if (watcher.status === 'online') {
+                          <span class="size-1.5 rounded-full bg-emerald-500"></span> Online
+                        } @else if (watcher.status === 'busy') {
+                          <span class="material-symbols-outlined text-[12px] animate-spin">sync</span> Busy
+                        } @else {
+                          <span class="size-1.5 rounded-full bg-slate-400"></span> Offline
                         }
-                      </div>
-                      <div class="flex items-center gap-2 text-sm text-slate-600">
-                        <span class="size-1.5 rounded-full" [ngClass]="completedSteps().includes('schedule') ? 'bg-emerald-500' : 'bg-slate-300'"></span> 
-                        <button (click)="openDrawer('schedule', 'onboarding')" class="hover:text-primary hover:underline cursor-pointer transition-colors" [class.line-through]="completedSteps().includes('schedule')">Add Schedule</button>
-                        @if (completedSteps().includes('schedule')) {
-                          <span class="material-symbols-outlined text-[14px] text-emerald-500 ml-auto">check_circle</span>
-                        }
-                      </div>
+                      </span>
                     </div>
+                    <p class="text-[11px] text-slate-500 mt-1 truncate max-w-[250px]">{{ watcher.description }}</p>
                   </div>
                 </div>
 
-                <!-- Step 3: Pending -->
-                <div class="flex items-start gap-4 p-4 border shadow-sm rounded transition-colors"
-                     [ngClass]="completedSteps().includes('schedule') ? 'border-primary/30 bg-primary/5' : 'border-slate-200 bg-white'">
-                  
-                  @if (completedSteps().includes('monitor')) {
-                    <div class="size-6 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5">
-                      <span class="material-symbols-outlined text-sm font-bold">check</span>
-                    </div>
-                  } @else if (completedSteps().includes('schedule')) {
-                    <div class="size-6 rounded-full border-2 border-primary flex items-center justify-center mt-0.5 shrink-0">
-                      <div class="size-2.5 bg-primary rounded-full"></div>
-                    </div>
-                  } @else {
-                    <div class="size-6 rounded-full border-2 border-slate-300 flex items-center justify-center mt-0.5 shrink-0"></div>
-                  }
+                <!-- Quick Stats -->
+                <div class="flex flex-wrap items-center gap-4 sm:gap-8 w-full xl:flex-1 xl:justify-end py-3 xl:py-0 border-y border-slate-100 xl:border-y-0 xl:px-4">
+                  <div class="flex flex-col w-[45%] sm:w-auto">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">IP Address</span>
+                    <span class="text-xs font-semibold text-slate-700 font-mono">{{ watcher.ipAddress }}</span>
+                  </div>
+                  <div class="flex flex-col w-[45%] sm:w-auto">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">BotManager</span>
+                    <span class="text-xs font-semibold text-slate-700">{{ watcher.botManager }}</span>
+                  </div>
+                  <div class="flex flex-col w-[45%] sm:w-auto">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Last Ping</span>
+                    <span class="text-xs font-semibold text-slate-700">{{ watcher.lastPing }}</span>
+                  </div>
+                  <div class="flex flex-col w-[45%] sm:w-auto">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Monitors</span>
+                    <span class="text-xs font-semibold text-slate-700">{{ watcher.assignedMonitors }}</span>
+                  </div>
+                </div>
 
-                  <div class="flex flex-col w-full">
-                    <div class="flex items-center justify-between">
-                      <span class="font-bold" [ngClass]="completedSteps().includes('schedule') ? 'text-slate-900' : 'text-slate-400'">Step 3: Create Process Monitor</span>
-                      <a href="#" class="text-xs text-primary hover:underline flex items-center gap-1" [ngClass]="completedSteps().includes('schedule') ? '' : 'opacity-50 pointer-events-none'">
-                        <span class="material-symbols-outlined text-[14px]">menu_book</span> Guide
-                      </a>
-                    </div>
-                    <div class="flex flex-col gap-2 mt-3">
-                      <div class="flex items-center gap-2 text-sm" [ngClass]="completedSteps().includes('schedule') ? 'text-slate-600' : 'text-slate-400'">
-                        <span class="size-1.5 rounded-full" [ngClass]="completedSteps().includes('monitor') ? 'bg-emerald-500' : 'bg-slate-200'"></span> 
-                        <button (click)="openDrawer('monitor', 'onboarding')" class="hover:text-primary hover:underline cursor-pointer transition-colors" [class.line-through]="completedSteps().includes('monitor')" [disabled]="!completedSteps().includes('schedule')">Submit & Launch</button>
-                        @if (completedSteps().includes('monitor')) {
-                          <span class="material-symbols-outlined text-[14px] text-emerald-500 ml-auto">check_circle</span>
-                        }
+                <!-- Actions -->
+                <div class="flex items-center justify-between sm:justify-end gap-3 w-full xl:w-auto pt-2 xl:pt-0 xl:pl-4 xl:border-l border-slate-100 shrink-0">
+                  <button (click)="toggleRWatcherExpand(watcher.id)" class="flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-primary px-3 py-1.5 rounded-md hover:bg-slate-50 transition-colors">
+                    <span class="material-symbols-outlined text-[16px]">{{ expandedRWatcher() === watcher.id ? 'expand_less' : 'expand_more' }}</span>
+                    {{ expandedRWatcher() === watcher.id ? 'Less' : 'Details' }}
+                  </button>
+                  <div class="relative group">
+                    <button class="text-slate-400 hover:text-slate-600 transition-colors size-8 flex items-center justify-center rounded-md hover:bg-slate-100">
+                      <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                    </button>
+                    <div class="absolute right-0 mt-1 w-44 bg-white rounded-md shadow-lg border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                      <div class="py-1">
+                        <button class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                          <span class="material-symbols-outlined text-[16px]">edit</span> Edit Configuration
+                        </button>
+                        <button class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                          <span class="material-symbols-outlined text-[16px]">restart_alt</span> Restart Connection
+                        </button>
+                        <button (click)="confirmDeleteRWatcher(watcher.id)" class="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 flex items-center gap-2">
+                          <span class="material-symbols-outlined text-[16px]">delete</span> Remove rWatcher
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+
+              <!-- Expanded Detail Panel -->
+              @if (expandedRWatcher() === watcher.id) {
+                <div class="border-t border-slate-100 bg-slate-50/50 px-4 py-4">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="flex flex-col gap-1">
+                      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Resolution</span>
+                      <span class="text-sm text-slate-800 font-medium">{{ watcher.resolution }}</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Color Depth</span>
+                      <span class="text-sm text-slate-800 font-medium">{{ watcher.colorDepth }}</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Username</span>
+                      <span class="text-sm text-slate-800 font-medium font-mono">{{ watcher.username }}</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Domain</span>
+                      <span class="text-sm text-slate-800 font-medium">{{ watcher.domain }}</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Uptime</span>
+                      <span class="text-sm font-medium" [class.text-emerald-600]="watcher.status !== 'offline'" [class.text-slate-500]="watcher.status === 'offline'">{{ watcher.uptime }}</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Assigned Monitors</span>
+                      <span class="text-sm text-slate-800 font-medium">{{ watcher.assignedMonitors }} active</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @empty {
+            <div class="bg-white border border-slate-200 rounded-lg p-12 text-center shadow-sm">
+              <div class="bg-slate-50 size-16 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+                <span class="material-symbols-outlined text-3xl">desktop_windows</span>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 mb-2">No rWatchers found</h3>
+              <p class="text-sm text-slate-500 mb-6 max-w-md mx-auto">Register your first rWatcher to start executing automated processes on remote machines.</p>
+              <button (click)="openDrawer('watcher', 'standalone')" class="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-md hover:bg-primary/90 transition-colors inline-flex items-center gap-2 shadow-sm shadow-primary/20">
+                <span class="material-symbols-outlined text-[18px]">add</span> Add Your First rWatcher
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="bg-white border border-slate-200 p-4 sm:p-8 lg:p-10 min-h-[500px] flex flex-col shadow-sm rounded max-w-6xl mx-auto w-full">
+        <!-- Header -->
+        <div class="mb-8 sm:mb-10">
+          <div class="flex items-center justify-between gap-4 mb-4">
+            <div class="flex items-center gap-3">
+              <div class="bg-primary size-10 rounded-lg text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-xl">rocket_launch</span>
+              </div>
+              <div>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 leading-tight">Get Started with Automai Watcher</h2>
+                <p class="text-sm text-slate-500 mt-0.5">Install, record a scenario, and launch your first process monitor.</p>
+              </div>
+            </div>
+            <div class="relative shrink-0">
+              <button (click)="startOnboarding()" class="bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-6 shadow-sm shadow-primary/20 transition-all flex items-center gap-2 rounded relative z-10">
+                <span class="material-symbols-outlined text-[18px]">rocket_launch</span> Start a Process
+              </button>
+              @if (completedSteps().includes('notifications') && !completedSteps().includes('watcher') && !tourSkipped()) {
+                <div class="absolute inset-0 rounded bg-primary/40 animate-ping z-0"></div>
+              }
             </div>
           </div>
 
-          <!-- Right Side: Getting Started & Docs -->
-          <div class="flex flex-col gap-4">
-            <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Resources</h3>
-            
-            <a class="group flex items-start gap-4 p-5 border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all text-left rounded bg-slate-50" href="#">
-              <div class="bg-white size-12 flex items-center justify-center border border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors rounded text-slate-600 shrink-0">
-                <span class="material-symbols-outlined">play_circle</span>
-              </div>
-              <div>
-                <h4 class="font-bold text-slate-900 mb-1">Getting Started Videos</h4>
-                <p class="text-sm text-slate-500">Learn how to set up your first watcher in minutes.</p>
-              </div>
-            </a>
-            
-            <a class="group flex items-start gap-4 p-5 border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all text-left rounded bg-slate-50" href="#">
-              <div class="bg-white size-12 flex items-center justify-center border border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors rounded text-slate-600 shrink-0">
-                <span class="material-symbols-outlined">menu_book</span>
-              </div>
-              <div>
-                <h4 class="font-bold text-slate-900 mb-1">Documentation</h4>
-                <p class="text-sm text-slate-500">Explore in-depth guides and API documentation.</p>
-              </div>
-            </a>
+          <div class="flex items-center gap-4 text-xs text-slate-400 font-medium mt-4">
+            <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">desktop_windows</span> Windows Server required</span>
+            <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">admin_panel_settings</span> Administrator access</span>
+            <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">timer</span> ~20 min</span>
           </div>
-          
+        </div>
+
+        <!-- Checklist + Resources horizontal layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left">
+
+        <!-- Checklist (left, 2 cols wide) -->
+        <div class="lg:col-span-2 flex flex-col gap-1">
+
+          <!-- INSTALL GROUP -->
+          <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 mt-1 px-1">Install</div>
+
+          <!-- Step 1: Download & Install -->
+          <a href="getting-started.html#install" target="_blank" class="flex items-start gap-3 py-3 px-4 rounded bg-emerald-50/60 border border-emerald-100 group hover:border-emerald-200 transition-colors no-underline">
+            <div class="size-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">
+              <span class="material-symbols-outlined text-[14px]">check</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-500 line-through">Download &amp; install Automai</span>
+                <span class="material-symbols-outlined text-[14px] text-slate-300 group-hover:text-primary transition-colors">open_in_new</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">Director, BotManager, and ScenarioBuilder installed.</p>
+            </div>
+          </a>
+
+          <!-- Step 2: Log in to Director -->
+          <a href="getting-started.html#login" target="_blank" class="flex items-start gap-3 py-3 px-4 rounded bg-emerald-50/60 border border-emerald-100 group hover:border-emerald-200 transition-colors no-underline">
+            <div class="size-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">
+              <span class="material-symbols-outlined text-[14px]">check</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-500 line-through">Log in to Director</span>
+                <span class="material-symbols-outlined text-[14px] text-slate-300 group-hover:text-primary transition-colors">open_in_new</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">Signed in as Admin User.</p>
+            </div>
+          </a>
+
+          <!-- Step 3: Verify BotManager -->
+          <a href="getting-started.html#botmanager" target="_blank" class="flex items-start gap-3 py-3 px-4 rounded bg-emerald-50/60 border border-emerald-100 group hover:border-emerald-200 transition-colors no-underline">
+            <div class="size-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">
+              <span class="material-symbols-outlined text-[14px]">check</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-500 line-through">Verify BotManager is connected</span>
+                <span class="material-symbols-outlined text-[14px] text-slate-300 group-hover:text-primary transition-colors">open_in_new</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">BotManager-1 online. Bot agent registered.</p>
+            </div>
+          </a>
+
+          <!-- RECORD GROUP -->
+          <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 mt-5 px-1">Record</div>
+
+          <!-- Step 4: Record scenario -->
+          <a href="getting-started.html#scenariobuilder" target="_blank" class="flex items-start gap-3 py-3 px-4 rounded bg-emerald-50/60 border border-emerald-100 group hover:border-emerald-200 transition-colors no-underline">
+            <div class="size-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">
+              <span class="material-symbols-outlined text-[14px]">check</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-500 line-through">Record the scenario</span>
+                <span class="material-symbols-outlined text-[14px] text-slate-300 group-hover:text-primary transition-colors">open_in_new</span>
+              </div>
+              <p class="text-xs text-slate-400 mt-0.5">Scenario recorded and validated in ScenarioBuilder.</p>
+            </div>
+          </a>
+
+          <!-- Step 5: Send to Director -->
+          <a href="getting-started.html#send" target="_blank" class="flex items-start gap-3 py-3 px-4 rounded group transition-colors no-underline"
+               [ngClass]="completedSteps().includes('notifications') ? 'bg-emerald-50/60 border border-emerald-100 hover:border-emerald-200' : 'border border-primary/30 bg-primary/5 hover:bg-primary/10'">
+            @if (completedSteps().includes('notifications')) {
+              <div class="size-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">
+                <span class="material-symbols-outlined text-[14px]">check</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-500 line-through">Send scenario to Director</span>
+                  <span class="material-symbols-outlined text-[14px] text-slate-300 group-hover:text-primary transition-colors">open_in_new</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-0.5">Script received from ScenarioBuilder.</p>
+              </div>
+            } @else {
+              <div class="size-7 rounded-full border-2 border-primary flex items-center justify-center shrink-0 mt-0.5">
+                <div class="size-2 bg-primary rounded-full"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-900">Send scenario to Director</span>
+                  <span class="material-symbols-outlined text-[14px] text-slate-400 group-hover:text-primary transition-colors">open_in_new</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Check notifications for the incoming script.</p>
+              </div>
+            }
+          </a>
+
+          <!-- CONFIGURE & LAUNCH GROUP -->
+          <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 mt-5 px-1">Configure &amp; Launch</div>
+
+          <!-- Step 6: Add rWatcher -->
+          <div class="flex items-start gap-3 py-3 px-4 rounded transition-colors cursor-pointer"
+               [ngClass]="completedSteps().includes('watcher') ? 'bg-emerald-50/60 border border-emerald-100' : (completedSteps().includes('notifications') ? 'border border-primary/30 bg-primary/5 hover:bg-primary/10' : 'border border-slate-200 bg-white')"
+               (click)="completedSteps().includes('notifications') && !completedSteps().includes('watcher') ? openDrawer('watcher', 'onboarding') : null">
+            @if (completedSteps().includes('watcher')) {
+              <div class="size-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">
+                <span class="material-symbols-outlined text-[14px]">check</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-500 line-through">Add an rWatcher</span>
+                  <a href="getting-started.html#rwatcher" target="_blank" class="material-symbols-outlined text-[14px] text-slate-300 hover:text-primary transition-colors" (click)="$event.stopPropagation()">open_in_new</a>
+                </div>
+                <p class="text-xs text-slate-400 mt-0.5">rWatcher configured with IP, credentials, and BotManager.</p>
+              </div>
+            } @else if (completedSteps().includes('notifications')) {
+              <div class="size-7 rounded-full border-2 border-primary flex items-center justify-center shrink-0 mt-0.5">
+                <div class="size-2 bg-primary rounded-full"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-900">Add an rWatcher</span>
+                  <a href="getting-started.html#rwatcher" target="_blank" class="text-xs text-primary hover:underline flex items-center gap-1" (click)="$event.stopPropagation()">
+                    <span class="material-symbols-outlined text-[14px]">menu_book</span> Guide
+                  </a>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Register the bot desktop that will run your scenario.</p>
+              </div>
+            } @else {
+              <div class="size-7 rounded-full border-2 border-slate-300 flex items-center justify-center shrink-0 mt-0.5"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-400">Add an rWatcher</span>
+                  <a href="getting-started.html#rwatcher" target="_blank" class="material-symbols-outlined text-[14px] text-slate-300 hover:text-primary transition-colors" (click)="$event.stopPropagation()">open_in_new</a>
+                </div>
+                <p class="text-xs text-slate-300 mt-0.5">Register the bot desktop that will run your scenario.</p>
+              </div>
+            }
+          </div>
+
+          <!-- Step 7: Create Schedule -->
+          <div class="flex items-start gap-3 py-3 px-4 rounded transition-colors cursor-pointer"
+               [ngClass]="completedSteps().includes('schedule') ? 'bg-emerald-50/60 border border-emerald-100' : (completedSteps().includes('watcher') ? 'border border-primary/30 bg-primary/5 hover:bg-primary/10' : 'border border-slate-200 bg-white')"
+               (click)="completedSteps().includes('watcher') && !completedSteps().includes('schedule') ? openDrawer('schedule', 'onboarding') : null">
+            @if (completedSteps().includes('schedule')) {
+              <div class="size-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">
+                <span class="material-symbols-outlined text-[14px]">check</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-500 line-through">Create a schedule</span>
+                  <a href="getting-started.html#schedule" target="_blank" class="material-symbols-outlined text-[14px] text-slate-300 hover:text-primary transition-colors" (click)="$event.stopPropagation()">open_in_new</a>
+                </div>
+                <p class="text-xs text-slate-400 mt-0.5">Schedule set (e.g. every 5 minutes).</p>
+              </div>
+            } @else if (completedSteps().includes('watcher')) {
+              <div class="size-7 rounded-full border-2 border-primary flex items-center justify-center shrink-0 mt-0.5">
+                <div class="size-2 bg-primary rounded-full"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-900">Create a schedule</span>
+                  <a href="getting-started.html#schedule" target="_blank" class="text-xs text-primary hover:underline flex items-center gap-1" (click)="$event.stopPropagation()">
+                    <span class="material-symbols-outlined text-[14px]">menu_book</span> Guide
+                  </a>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Define how often the scenario runs.</p>
+              </div>
+            } @else {
+              <div class="size-7 rounded-full border-2 border-slate-300 flex items-center justify-center shrink-0 mt-0.5"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-400">Create a schedule</span>
+                  <a href="getting-started.html#schedule" target="_blank" class="material-symbols-outlined text-[14px] text-slate-300 hover:text-primary transition-colors" (click)="$event.stopPropagation()">open_in_new</a>
+                </div>
+                <p class="text-xs text-slate-300 mt-0.5">Define how often the scenario runs.</p>
+              </div>
+            }
+          </div>
+
+          <!-- Step 8: Create Process Monitor -->
+          <div class="flex items-start gap-3 py-3 px-4 rounded transition-colors cursor-pointer"
+               [ngClass]="completedSteps().includes('monitor') ? 'bg-emerald-50/60 border border-emerald-100' : (completedSteps().includes('schedule') ? 'border border-primary/30 bg-primary/5 hover:bg-primary/10' : 'border border-slate-200 bg-white')"
+               (click)="completedSteps().includes('schedule') && !completedSteps().includes('monitor') ? openDrawer('monitor', 'onboarding') : null">
+            @if (completedSteps().includes('monitor')) {
+              <div class="size-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">
+                <span class="material-symbols-outlined text-[14px]">check</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-500 line-through">Create Process Monitor</span>
+                  <a href="getting-started.html#monitor" target="_blank" class="material-symbols-outlined text-[14px] text-slate-300 hover:text-primary transition-colors" (click)="$event.stopPropagation()">open_in_new</a>
+                </div>
+                <p class="text-xs text-slate-400 mt-0.5">Monitor linked to scenario, schedule, and rWatcher.</p>
+              </div>
+            } @else if (completedSteps().includes('schedule')) {
+              <div class="size-7 rounded-full border-2 border-primary flex items-center justify-center shrink-0 mt-0.5">
+                <div class="size-2 bg-primary rounded-full"></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-900">Create Process Monitor</span>
+                  <a href="getting-started.html#monitor" target="_blank" class="text-xs text-primary hover:underline flex items-center gap-1" (click)="$event.stopPropagation()">
+                    <span class="material-symbols-outlined text-[14px]">menu_book</span> Guide
+                  </a>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Tie it all together: scenario + schedule + rWatcher.</p>
+              </div>
+            } @else {
+              <div class="size-7 rounded-full border-2 border-slate-300 flex items-center justify-center shrink-0 mt-0.5"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-semibold text-slate-400">Create Process Monitor</span>
+                  <a href="getting-started.html#monitor" target="_blank" class="material-symbols-outlined text-[14px] text-slate-300 hover:text-primary transition-colors" (click)="$event.stopPropagation()">open_in_new</a>
+                </div>
+                <p class="text-xs text-slate-300 mt-0.5">Tie it all together: scenario + schedule + rWatcher.</p>
+              </div>
+            }
+          </div>
+
+          <!-- Step 9: See it run -->
+          <a href="getting-started.html#results" target="_blank" class="flex items-start gap-3 py-3 px-4 rounded border border-slate-200 bg-white group hover:border-slate-300 transition-colors no-underline">
+            <div class="size-7 rounded-full border-2 border-slate-300 flex items-center justify-center shrink-0 mt-0.5"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-400">See it run</span>
+                <span class="material-symbols-outlined text-[14px] text-slate-300 group-hover:text-primary transition-colors">open_in_new</span>
+              </div>
+              <p class="text-xs text-slate-300 mt-0.5">Watch your first automated run execute on the dashboard.</p>
+            </div>
+          </a>
+
+          <!-- Step 10: Export reports -->
+          <a href="getting-started.html#reports" target="_blank" class="flex items-start gap-3 py-3 px-4 rounded border border-slate-200 bg-white group hover:border-slate-300 transition-colors no-underline">
+            <div class="size-7 rounded-full border-2 border-slate-300 flex items-center justify-center shrink-0 mt-0.5"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-semibold text-slate-400">Export reports</span>
+                <span class="material-symbols-outlined text-[14px] text-slate-300 group-hover:text-primary transition-colors">open_in_new</span>
+              </div>
+              <p class="text-xs text-slate-300 mt-0.5">Download run results and share with your team.</p>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- Resources (right sidebar) -->
+        <div class="flex flex-col gap-3">
+          <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Resources</h3>
+
+          <a class="group flex items-start gap-3 p-4 border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all text-left rounded bg-slate-50 no-underline" href="getting-started.html" target="_blank">
+            <div class="bg-white size-10 flex items-center justify-center border border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors rounded text-slate-600 shrink-0">
+              <span class="material-symbols-outlined text-xl">play_circle</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 text-sm mb-0.5">Getting Started Videos</h4>
+              <p class="text-xs text-slate-500">Set up your first watcher in minutes.</p>
+            </div>
+          </a>
+
+          <a class="group flex items-start gap-3 p-4 border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all text-left rounded bg-slate-50 no-underline" href="getting-started.html" target="_blank">
+            <div class="bg-white size-10 flex items-center justify-center border border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors rounded text-slate-600 shrink-0">
+              <span class="material-symbols-outlined text-xl">menu_book</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 text-sm mb-0.5">Documentation</h4>
+              <p class="text-xs text-slate-500">In-depth guides and API docs.</p>
+            </div>
+          </a>
+
+        </div>
+
         </div>
       </div>
     }
@@ -643,6 +973,33 @@
     (openAddWatcher)="openDrawer('watcher', drawerMode())"
     (openAddSchedule)="openDrawer('schedule', drawerMode())">
   </app-create-process-monitor-drawer>
+}
+
+<!-- Delete rWatcher Confirmation Modal -->
+@if (rwatcherToDelete() !== null) {
+  <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden">
+      <div class="p-6">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="size-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-2xl">warning</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">Remove rWatcher</h3>
+            <p class="text-sm text-slate-500 mt-1">Are you sure you want to remove this rWatcher? Any monitors assigned to it will need to be reconfigured.</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
+        <button (click)="cancelDeleteRWatcher()" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors">
+          Cancel
+        </button>
+        <button (click)="executeDeleteRWatcher()" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors shadow-sm shadow-red-600/20">
+          Remove rWatcher
+        </button>
+      </div>
+    </div>
+  </div>
 }
 
 <!-- Delete Confirmation Modal -->

@@ -7,9 +7,9 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex justify-end z-50">
-      <div class="w-full max-w-[600px] bg-white h-full shadow-2xl flex flex-col animate-slide-in">
-        
-        <!-- Full Width Stepper (Onboarding Mode) -->
+      <div class="w-full max-w-[560px] bg-white h-full shadow-2xl flex flex-col animate-slide-in">
+
+        <!-- Onboarding Stepper -->
         @if (mode === 'onboarding') {
           <div class="w-full bg-slate-50 border-b border-slate-200 px-6 py-3 flex items-center justify-between">
             <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">In progress (1/3)</span>
@@ -23,149 +23,185 @@ import { CommonModule } from '@angular/common';
           </div>
         }
 
-        <!-- Header Section -->
-        <header class="flex items-center justify-between border-b border-slate-200 px-6 py-4 bg-white">
-          <div class="flex items-center gap-3 text-slate-900">
-            <div class="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-lg text-primary">
-              <span class="material-symbols-outlined text-2xl">desktop_windows</span>
-            </div>
-            <div class="flex flex-col">
-              <h2 class="text-lg font-medium text-primary leading-tight">Add new rWatcher</h2>
-              <p class="text-xs text-slate-500">rWatcher user and RDP details</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-4">
-            <button class="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-full transition-colors">
-              <span class="material-symbols-outlined text-[16px]">play_circle</span>
-              Watch Tutorial
-            </button>
-            <button (click)="closeDrawer.emit()" class="flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full h-8 w-8 transition-colors">
-              <span class="material-symbols-outlined text-xl">close</span>
-            </button>
-          </div>
+        <!-- Header -->
+        <header class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white">
+          <h2 class="text-lg font-bold text-slate-900">Add rWatcher</h2>
+          <button (click)="closeDrawer.emit()" class="flex items-center justify-center text-slate-400 hover:text-slate-600 rounded-full h-8 w-8 transition-colors">
+            <span class="material-symbols-outlined text-xl">close</span>
+          </button>
         </header>
 
-        <!-- Content Area -->
-        <div class="flex-1 overflow-y-auto custom-scrollbar p-6 bg-slate-50/50">
-          <div class="space-y-6">
-            
-            <!-- Select BotManager -->
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar divide-y divide-slate-100">
+
+          <!-- 1. IDENTITY — most critical, shown first -->
+          <section class="px-6 py-5">
+            <div class="mb-4">
+              <span class="text-[11px] font-bold tracking-widest text-primary uppercase">Identity</span>
+              <p class="text-slate-500 text-xs mt-0.5">This is how the rWatcher will appear across all monitors and reports.</p>
+            </div>
+            <div class="flex flex-col gap-4">
+              <!-- Alias — most important field, visually prominent -->
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center gap-1.5">
+                  <label class="text-sm font-semibold text-slate-800">Alias <span class="text-red-500">*</span></label>
+                  <span class="text-[10px] font-semibold text-primary bg-primary/10 px-1.5 py-0.5 rounded uppercase tracking-wide">Required</span>
+                </div>
+                <input
+                  type="text"
+                  placeholder="e.g. rWatcher-NYC-01"
+                  class="block px-3 py-3 w-full text-sm font-medium text-slate-900 bg-white rounded-lg border-2 border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-slate-400 transition-colors"
+                />
+                <p class="text-xs text-slate-500">Use a name that clearly identifies the machine's location or role.</p>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-slate-700">Description <span class="text-slate-400 font-normal">(optional)</span></label>
+                <textarea
+                  rows="2"
+                  placeholder="Describe the purpose or location of this rWatcher..."
+                  class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none placeholder-slate-400"
+                ></textarea>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. MACHINE CONFIGURATION -->
+          <section class="px-6 py-5">
+            <div class="mb-4">
+              <span class="text-[11px] font-bold tracking-widest text-primary uppercase">Machine Configuration</span>
+              <p class="text-slate-500 text-xs mt-0.5">Select the BotManager that will host and manage this rWatcher.</p>
+            </div>
             <div class="flex flex-col gap-1.5">
-              <label for="botManager" class="text-sm font-medium text-slate-700">Select BotManager to add new rWatcher</label>
+              <label class="text-sm font-medium text-slate-700">BotManager <span class="text-red-500">*</span></label>
               <div class="relative">
-                <select id="botManager" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
-                  <option>BotManager - 1</option>
-                  <option>BotManager - 2</option>
+                <select class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
+                  <option value="" disabled selected>Select a BotManager...</option>
+                  <option>BotManager-1 (Online)</option>
+                  <option>BotManager-2 (Offline)</option>
                 </select>
                 <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
-                  <span class="material-symbols-outlined text-slate-500 text-sm">arrow_drop_down</span>
+                  <span class="material-symbols-outlined text-slate-400 text-[20px]">expand_more</span>
                 </div>
               </div>
             </div>
+          </section>
 
-            <!-- Credentials Grid -->
-            <div class="grid grid-cols-3 gap-4 items-start mt-4">
-              <div class="flex flex-col gap-1.5">
-                <label for="username" class="text-sm font-medium text-slate-700">New rWatcher username</label>
-                <input type="text" id="username" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
-              </div>
-              <div class="flex flex-col gap-1.5">
-                <label for="password" class="text-sm font-medium text-slate-700">rWatcher password*</label>
-                <div class="relative">
-                  <input type="password" id="password" class="block px-3 py-2.5 pr-10 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
-                  <button class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center text-slate-400 hover:text-primary transition-colors" title="Toggle password visibility">
-                    <span class="material-symbols-outlined text-lg">visibility</span>
-                  </button>
-                </div>
-                <span class="text-[10px] text-slate-500 text-right">min 6 characters</span>
-              </div>
-              <div class="flex flex-col gap-1.5">
-                <label for="domain" class="text-sm font-medium text-slate-700">rWatcher domain</label>
-                <input type="text" id="domain" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
-              </div>
+          <!-- 3. CREDENTIALS -->
+          <section class="px-6 py-5">
+            <div class="mb-4">
+              <span class="text-[11px] font-bold tracking-widest text-primary uppercase">Credentials</span>
+              <p class="text-slate-500 text-xs mt-0.5">Windows account used to log into this machine via RDP.</p>
             </div>
-
-            <!-- Alias -->
-            <div class="flex flex-col gap-1.5 mt-2">
-              <label for="alias" class="text-sm font-medium text-slate-700">New rWatcher alias*</label>
-              <input type="text" id="alias" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
-            </div>
-
-            <!-- Description -->
-            <div class="flex flex-col gap-1.5 mt-4">
-              <label for="description" class="text-sm font-medium text-slate-700">Description</label>
-              <textarea id="description" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-y min-h-[80px]"></textarea>
-            </div>
-
-            <!-- RDP Parameters -->
-            <div class="pt-4 border-t border-slate-200">
-              <div class="flex items-center gap-2 mb-4">
-                <h3 class="text-slate-600 font-bold text-sm">RDP parameters</h3>
-                <span class="material-symbols-outlined text-slate-500 text-sm bg-slate-200 rounded-full size-4 flex items-center justify-center">info</span>
-              </div>
-
-              <div class="grid grid-cols-2 gap-4 mb-4 mt-2">
+            <div class="flex flex-col gap-4">
+              <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
-                  <label for="rdpResolution" class="text-sm font-medium text-slate-700">RDP resolution</label>
+                  <label class="text-sm font-medium text-slate-700">Username <span class="text-red-500">*</span></label>
+                  <input type="text" placeholder="e.g. DOMAIN\\user" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-slate-400" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-sm font-medium text-slate-700">Password <span class="text-red-500">*</span></label>
                   <div class="relative">
-                    <select id="rdpResolution" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
+                    <input type="password" class="block px-3 py-2.5 pr-10 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
+                    <button class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center text-slate-400 hover:text-primary transition-colors" title="Toggle visibility">
+                      <span class="material-symbols-outlined text-[18px]">visibility</span>
+                    </button>
+                  </div>
+                  <span class="text-[10px] text-slate-400">Minimum 6 characters</span>
+                </div>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-medium text-slate-700">Domain <span class="text-slate-400 font-normal">(optional)</span></label>
+                <input type="text" placeholder="e.g. CORP" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-slate-400" />
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. RDP PARAMETERS — with caution notice -->
+          <section class="px-6 py-5">
+            <div class="mb-4">
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-bold tracking-widest text-primary uppercase">RDP Parameters</span>
+              </div>
+              <p class="text-slate-500 text-xs mt-0.5">Remote Desktop settings applied when connecting to this machine.</p>
+            </div>
+
+            <!-- Caution banner -->
+            <div class="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-5">
+              <span class="material-symbols-outlined text-amber-500 text-[18px] mt-0.5 shrink-0">warning</span>
+              <p class="text-xs text-amber-800 leading-relaxed">
+                <span class="font-semibold">Double-check these settings.</span> Incorrect resolution, color depth, or IP address may prevent the rWatcher from connecting. Verify values with your system administrator before saving.
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                  <label class="text-sm font-medium text-slate-700">Resolution</label>
+                  <div class="relative">
+                    <select class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
                       <option>1280x1024</option>
                       <option>1920x1080</option>
+                      <option>1600x900</option>
                     </select>
                     <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
-                      <span class="material-symbols-outlined text-slate-500 text-sm">arrow_drop_down</span>
+                      <span class="material-symbols-outlined text-slate-400 text-[20px]">expand_more</span>
                     </div>
                   </div>
                 </div>
                 <div class="flex flex-col gap-1.5">
-                  <label for="rdpColorDepth" class="text-sm font-medium text-slate-700">RDP color depth</label>
+                  <label class="text-sm font-medium text-slate-700">Color Depth</label>
                   <div class="relative">
-                    <select id="rdpColorDepth" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
+                    <select class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary cursor-pointer">
                       <option>32-bit</option>
                       <option>16-bit</option>
                     </select>
                     <div class="absolute right-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
-                      <span class="material-symbols-outlined text-slate-500 text-sm">arrow_drop_down</span>
+                      <span class="material-symbols-outlined text-slate-400 text-[20px]">expand_more</span>
                     </div>
                   </div>
                 </div>
               </div>
-
               <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
-                  <label for="botManagerIp" class="text-sm font-medium text-slate-700">BotManager IP to be used when downloading RDP</label>
-                  <input type="text" id="botManagerIp" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" value="ec2amaz-ts88pb7" />
+                  <div class="flex items-center gap-1">
+                    <label class="text-sm font-medium text-slate-700">BotManager IP</label>
+                    <span class="material-symbols-outlined text-slate-400 text-[14px]" title="IP or hostname used when downloading the RDP file">info</span>
+                  </div>
+                  <input type="text" value="ec2amaz-ts88pb7" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-mono" />
                 </div>
                 <div class="flex flex-col gap-1.5">
-                  <label for="rdpTimeout" class="text-sm font-medium text-slate-700">RDP timeout</label>
-                  <input type="text" id="rdpTimeout" class="block px-3 py-2.5 w-full text-sm text-slate-900 bg-white rounded-md border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" value="30" />
-                  <span class="text-[10px] text-slate-700 text-right mt-1">in seconds</span>
+                  <label class="text-sm font-medium text-slate-700">Connection Timeout</label>
+                  <div class="relative">
+                    <input type="number" value="30" min="5" max="300" class="block px-3 py-2.5 pr-16 w-full text-sm text-slate-900 bg-white rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
+                    <span class="absolute right-3 top-0 bottom-0 flex items-center text-xs text-slate-400 pointer-events-none">seconds</span>
+                  </div>
                 </div>
               </div>
             </div>
+          </section>
 
-          </div>
         </div>
 
-        <!-- Footer Actions -->
-        <footer class="p-6 bg-white flex justify-end">
+        <!-- Footer -->
+        <footer class="border-t border-slate-100 px-6 py-4 bg-white flex items-center justify-end gap-3">
+          <button (click)="closeDrawer.emit()" class="px-5 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+            Cancel
+          </button>
           <div class="relative inline-block">
-            <button (click)="nextStep.emit()" class="px-8 py-2 rounded-full bg-primary text-white font-medium text-sm hover:bg-primary/90 transition-colors shadow-md shadow-primary/20 relative z-10">
-              {{ mode === 'onboarding' ? 'Next Step' : 'Submit' }}
+            <button (click)="nextStep.emit()" class="px-5 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20 relative z-10">
+              <span class="material-symbols-outlined text-[16px]">desktop_windows</span>
+              {{ mode === 'onboarding' ? 'Next Step' : 'Add rWatcher' }}
             </button>
-            
             @if (mode === 'onboarding') {
-              <!-- Guided Tour Tooltip -->
-              <div class="absolute bottom-full mb-4 right-0 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[280px] text-center animate-bounce z-20 whitespace-normal leading-relaxed">
-                🤖 An rWatcher is the machine that runs your tasks. Click Next when you're ready!
+              <div class="absolute bottom-full mb-4 right-0 bg-slate-800 text-white text-sm font-medium px-4 py-3 rounded-lg shadow-xl w-max max-w-[260px] text-center animate-bounce z-20 whitespace-normal leading-relaxed">
+                🤖 An rWatcher is the machine that runs your tasks. Click Next when ready!
                 <div class="absolute -bottom-1.5 right-8 w-3 h-3 bg-slate-800 rotate-45"></div>
               </div>
-              
-              <!-- Pulsing ring -->
-              <div class="absolute inset-0 rounded-full bg-primary/40 animate-ping z-0"></div>
+              <div class="absolute inset-0 rounded-lg bg-primary/40 animate-ping z-0"></div>
             }
           </div>
         </footer>
+
       </div>
     </div>
   `,

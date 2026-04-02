@@ -17,6 +17,22 @@ export interface ProcessMonitor {
   projectLinked?: string;
 }
 
+export interface RWatcher {
+  id: string;
+  alias: string;
+  description: string;
+  status: 'online' | 'offline' | 'busy';
+  ipAddress: string;
+  lastPing: string;
+  botManager: string;
+  resolution: string;
+  colorDepth: string;
+  username: string;
+  domain: string;
+  assignedMonitors: number;
+  uptime: string;
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root',
@@ -34,12 +50,107 @@ export class App {
   activeDrawer = signal<'watcher' | 'schedule' | 'monitor' | null>(null);
   drawerMode = signal<'onboarding' | 'standalone'>('standalone');
   completedSteps = signal<string[]>([]);
-  activeTab = signal<'dashboard' | 'process-monitor'>('dashboard');
+  activeTab = signal<'dashboard' | 'process-monitor' | 'rwatchers'>('dashboard');
   showNotifications = signal<boolean>(false);
+  tourSkipped = signal<boolean>(false);
   editingMonitorId = signal<string | null>(null);
   monitorToDelete = signal<string | null>(null);
 
   monitors = signal<ProcessMonitor[]>([]);
+
+  rwatchers = signal<RWatcher[]>([
+    {
+      id: '1',
+      alias: 'rWatcher001',
+      description: 'Primary watcher for NYC office automation tasks',
+      status: 'online',
+      ipAddress: '192.168.1.105',
+      lastPing: 'Just now',
+      botManager: 'BotManager-1',
+      resolution: '1920x1080',
+      colorDepth: '32-bit',
+      username: 'CORP\\auto_user1',
+      domain: 'CORP',
+      assignedMonitors: 2,
+      uptime: '14d 6h 32m'
+    },
+    {
+      id: '2',
+      alias: 'rWatcher002',
+      description: 'Backup watcher for SFDC auth flows',
+      status: 'offline',
+      ipAddress: '192.168.1.106',
+      lastPing: '2 hours ago',
+      botManager: 'BotManager-1',
+      resolution: '1280x1024',
+      colorDepth: '32-bit',
+      username: 'CORP\\auto_user2',
+      domain: 'CORP',
+      assignedMonitors: 1,
+      uptime: '--'
+    },
+    {
+      id: '3',
+      alias: 'rWatcher003',
+      description: 'Dedicated watcher for legacy data sync processes',
+      status: 'busy',
+      ipAddress: '192.168.1.107',
+      lastPing: 'Just now',
+      botManager: 'BotManager-2',
+      resolution: '1920x1080',
+      colorDepth: '16-bit',
+      username: 'CORP\\auto_user3',
+      domain: 'CORP',
+      assignedMonitors: 3,
+      uptime: '7d 12h 15m'
+    }
+  ]);
+
+  rwatcherToDelete = signal<string | null>(null);
+  expandedRWatcher = signal<string | null>(null);
+  rwatcherSearch = signal<string>('');
+
+  toggleRWatcherExpand(id: string) {
+    this.expandedRWatcher.update(current => current === id ? null : id);
+  }
+
+  confirmDeleteRWatcher(id: string) {
+    this.rwatcherToDelete.set(id);
+  }
+
+  executeDeleteRWatcher() {
+    const id = this.rwatcherToDelete();
+    if (id) {
+      this.rwatchers.update(watchers => watchers.filter(w => w.id !== id));
+    }
+    this.rwatcherToDelete.set(null);
+  }
+
+  cancelDeleteRWatcher() {
+    this.rwatcherToDelete.set(null);
+  }
+
+  filteredRWatchers() {
+    const search = this.rwatcherSearch().toLowerCase();
+    if (!search) return this.rwatchers();
+    return this.rwatchers().filter(w =>
+      w.alias.toLowerCase().includes(search) ||
+      w.ipAddress.includes(search) ||
+      w.botManager.toLowerCase().includes(search)
+    );
+  }
+
+  onlineRWatcherCount() {
+    return this.rwatchers().filter(w => w.status === 'online').length;
+  }
+
+  busyRWatcherCount() {
+    return this.rwatchers().filter(w => w.status === 'busy').length;
+  }
+
+  offlineRWatcherCount() {
+    return this.rwatchers().filter(w => w.status === 'offline').length;
+  }
 
   toggleRunState(id: string) {
     this.monitors.update(monitors => monitors.map(m => {
@@ -95,6 +206,10 @@ export class App {
     } else if (!this.completedSteps().includes('monitor')) {
       this.openDrawer('monitor', 'onboarding');
     }
+  }
+
+  skipTour() {
+    this.tourSkipped.set(true);
   }
 
   toggleNotifications() {

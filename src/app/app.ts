@@ -55,6 +55,8 @@ export class App {
   tourSkipped = signal<boolean>(false);
   editingMonitorId = signal<string | null>(null);
   monitorToDelete = signal<string | null>(null);
+  seeItRunChecked = signal<boolean>(false);
+  exportReportsChecked = signal<boolean>(false);
 
   monitors = signal<ProcessMonitor[]>([]);
 

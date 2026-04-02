@@ -50,13 +50,20 @@ export class App {
   activeDrawer = signal<'watcher' | 'schedule' | 'monitor' | null>(null);
   drawerMode = signal<'onboarding' | 'standalone'>('standalone');
   completedSteps = signal<string[]>([]);
-  activeTab = signal<'dashboard' | 'process-monitor' | 'rwatchers'>('dashboard');
+  activeTab = signal<'dashboard' | 'process-monitor' | 'rwatchers' | 'help'>('dashboard');
   showNotifications = signal<boolean>(false);
   tourSkipped = signal<boolean>(false);
   editingMonitorId = signal<string | null>(null);
   monitorToDelete = signal<string | null>(null);
   seeItRunChecked = signal<boolean>(false);
   exportReportsChecked = signal<boolean>(false);
+  onboardingDismissed = signal<boolean>(false);
+
+  allStepsComplete() {
+    return this.completedSteps().includes('monitor')
+      && this.seeItRunChecked()
+      && this.exportReportsChecked();
+  }
 
   monitors = signal<ProcessMonitor[]>([]);
 
@@ -274,7 +281,7 @@ export class App {
       } else if (currentStep === 'schedule') {
         this.activeDrawer.set('monitor');
       } else if (currentStep === 'monitor') {
-        // Add the first monitor
+        // Add the first monitor but stay on onboarding until manual checks done
         this.monitors.set([{
           id: '1',
           name: 'Process Notepad',
@@ -287,7 +294,6 @@ export class App {
           projectLinked: 'My First Project'
         }]);
         this.activeDrawer.set(null);
-        this.activeTab.set('dashboard'); // Keep them on dashboard to see the new KPIs
       }
     } else {
       if (currentStep === 'watcher' || currentStep === 'schedule') {
@@ -296,5 +302,10 @@ export class App {
         this.activeDrawer.set(null);
       }
     }
+  }
+
+  dismissOnboarding() {
+    this.onboardingDismissed.set(true);
+    this.activeTab.set('dashboard');
   }
 }
